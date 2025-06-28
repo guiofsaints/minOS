@@ -1759,54 +1759,17 @@ scaler_t PLAT_getScaler(GFX_Renderer *renderer)
 
 void setRectToAspectRatio(SDL_Rect *dst_rect)
 {
-	int x = vid.blit->src_x;
-	int y = vid.blit->src_y;
-	int w = vid.blit->src_w;
-	int h = vid.blit->src_h;
+	// Use the calculated destination dimensions from renderer which include scale_factor
+	int x = vid.blit->dst_x;
+	int y = vid.blit->dst_y;
+	int w = vid.blit->dst_w;
+	int h = vid.blit->dst_h;
 
-	if (vid.blit->aspect == 0)
-	{
-		w = vid.blit->src_w * vid.blit->scale;
-		h = vid.blit->src_h * vid.blit->scale;
-		dst_rect->x = (device_width - w) / 2 + screenx;
-		dst_rect->y = (device_height - h) / 2 + screeny;
-		dst_rect->w = w;
-		dst_rect->h = h;
-	}
-	else if (vid.blit->aspect > 0)
-	{
-		if (should_rotate)
-		{
-			h = device_width;
-			w = h * vid.blit->aspect;
-			if (w > device_height)
-			{
-				w = device_height;
-				h = w / vid.blit->aspect;
-			}
-		}
-		else
-		{
-			h = device_height;
-			w = h * vid.blit->aspect;
-			if (w > device_width)
-			{
-				w = device_width;
-				h = w / vid.blit->aspect;
-			}
-		}
-		dst_rect->x = (device_width - w) / 2 + screenx;
-		dst_rect->y = (device_height - h) / 2 + screeny;
-		dst_rect->w = w;
-		dst_rect->h = h;
-	}
-	else
-	{
-		dst_rect->x = screenx;
-		dst_rect->y = screeny;
-		dst_rect->w = should_rotate ? device_height : device_width;
-		dst_rect->h = should_rotate ? device_width : device_height;
-	}
+	// Apply screen offsets
+	dst_rect->x = x + screenx;
+	dst_rect->y = y + screeny;
+	dst_rect->w = w;
+	dst_rect->h = h;
 }
 
 void PLAT_blitRenderer(GFX_Renderer *renderer)
