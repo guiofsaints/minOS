@@ -112,32 +112,121 @@ cores:
 else
 cores: # TODO: can't assume every platform will have the same stock cores (platform should be responsible for copy too)
 	# stock cores
-	cp ./workspace/$(PLATFORM)/cores/output/fceumm_libretro.so ./build/SYSTEM/$(PLATFORM)/cores
-	cp ./workspace/$(PLATFORM)/cores/output/gambatte_libretro.so ./build/SYSTEM/$(PLATFORM)/cores
-	cp ./workspace/$(PLATFORM)/cores/output/gpsp_libretro.so ./build/SYSTEM/$(PLATFORM)/cores
-	cp ./workspace/$(PLATFORM)/cores/output/picodrive_libretro.so ./build/SYSTEM/$(PLATFORM)/cores
-	cp ./workspace/$(PLATFORM)/cores/output/snes9x_libretro.so ./build/SYSTEM/$(PLATFORM)/cores
-	cp ./workspace/$(PLATFORM)/cores/output/pcsx_rearmed_libretro.so ./build/SYSTEM/$(PLATFORM)/cores
+	@echo "Checking for cores in ./workspace/$(PLATFORM)/cores/output/"
+	@if [ -f ./workspace/$(PLATFORM)/cores/output/fceumm_libretro.so ]; then \
+		cp ./workspace/$(PLATFORM)/cores/output/fceumm_libretro.so ./build/SYSTEM/$(PLATFORM)/cores; \
+	else \
+		echo "Warning: fceumm_libretro.so not found, skipping"; \
+	fi
+	@if [ -f ./workspace/$(PLATFORM)/cores/output/gambatte_libretro.so ]; then \
+		cp ./workspace/$(PLATFORM)/cores/output/gambatte_libretro.so ./build/SYSTEM/$(PLATFORM)/cores; \
+	else \
+		echo "Warning: gambatte_libretro.so not found, skipping"; \
+	fi
+	@if [ -f ./workspace/$(PLATFORM)/cores/output/gpsp_libretro.so ]; then \
+		cp ./workspace/$(PLATFORM)/cores/output/gpsp_libretro.so ./build/SYSTEM/$(PLATFORM)/cores; \
+	else \
+		echo "Warning: gpsp_libretro.so not found, skipping"; \
+	fi
+	@if [ -f ./workspace/$(PLATFORM)/cores/output/picodrive_libretro.so ]; then \
+		cp ./workspace/$(PLATFORM)/cores/output/picodrive_libretro.so ./build/SYSTEM/$(PLATFORM)/cores; \
+	else \
+		echo "Warning: picodrive_libretro.so not found, skipping"; \
+	fi
+	@if [ -f ./workspace/$(PLATFORM)/cores/output/snes9x_libretro.so ]; then \
+		cp ./workspace/$(PLATFORM)/cores/output/snes9x_libretro.so ./build/SYSTEM/$(PLATFORM)/cores; \
+	else \
+		echo "Warning: snes9x_libretro.so not found, skipping"; \
+	fi
+	@if [ -f ./workspace/$(PLATFORM)/cores/output/pcsx_rearmed_libretro.so ]; then \
+		cp ./workspace/$(PLATFORM)/cores/output/pcsx_rearmed_libretro.so ./build/SYSTEM/$(PLATFORM)/cores; \
+	else \
+		echo "Warning: pcsx_rearmed_libretro.so not found, skipping"; \
+	fi
 	
-	# extras
-	cp ./workspace/$(PLATFORM)/cores/output/fake08_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/P8.pak
-	cp ./workspace/$(PLATFORM)/cores/output/mgba_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/MGBA.pak
-	cp ./workspace/$(PLATFORM)/cores/output/mgba_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/SGB.pak
-	cp ./workspace/$(PLATFORM)/cores/output/mednafen_pce_fast_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/PCE.pak
-	cp ./workspace/$(PLATFORM)/cores/output/pokemini_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/PKM.pak
-	cp ./workspace/$(PLATFORM)/cores/output/race_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/NGP.pak
-	cp ./workspace/$(PLATFORM)/cores/output/race_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/NGPC.pak
-	cp ./workspace/$(PLATFORM)/cores/output/fbneo_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/FBN.pak
-	cp ./workspace/$(PLATFORM)/cores/output/mednafen_supafaust_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/SUPA.pak
-	cp ./workspace/$(PLATFORM)/cores/output/mednafen_vb_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/VB.pak
-	cp ./workspace/$(PLATFORM)/cores/output/cap32_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/CPC.pak
-	cp ./workspace/$(PLATFORM)/cores/output/puae2021_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/PUAE.pak
-	cp ./workspace/$(PLATFORM)/cores/output/prboom_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/PRBOOM.pak
-	cp ./workspace/$(PLATFORM)/cores/output/vice_x64_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/C64.pak
-	cp ./workspace/$(PLATFORM)/cores/output/vice_x128_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/C128.pak
-	cp ./workspace/$(PLATFORM)/cores/output/vice_xplus4_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/PLUS4.pak
-	cp ./workspace/$(PLATFORM)/cores/output/vice_xpet_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/PET.pak
-	cp ./workspace/$(PLATFORM)/cores/output/vice_xvic_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/VIC.pak
+	# extras - checking if files exist before copying
+	@if [ -f ./workspace/$(PLATFORM)/cores/output/fake08_libretro.so ]; then \
+		cp ./workspace/$(PLATFORM)/cores/output/fake08_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/P8.pak; \
+	else \
+		echo "Warning: fake08_libretro.so not found, skipping"; \
+	fi
+	@if [ -f ./workspace/$(PLATFORM)/cores/output/mgba_libretro.so ]; then \
+		cp ./workspace/$(PLATFORM)/cores/output/mgba_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/MGBA.pak; \
+		cp ./workspace/$(PLATFORM)/cores/output/mgba_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/SGB.pak; \
+	else \
+		echo "Warning: mgba_libretro.so not found, skipping"; \
+	fi
+	@if [ -f ./workspace/$(PLATFORM)/cores/output/mednafen_pce_fast_libretro.so ]; then \
+		cp ./workspace/$(PLATFORM)/cores/output/mednafen_pce_fast_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/PCE.pak; \
+	else \
+		echo "Warning: mednafen_pce_fast_libretro.so not found, skipping"; \
+	fi
+	@if [ -f ./workspace/$(PLATFORM)/cores/output/pokemini_libretro.so ]; then \
+		cp ./workspace/$(PLATFORM)/cores/output/pokemini_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/PKM.pak; \
+	else \
+		echo "Warning: pokemini_libretro.so not found, skipping"; \
+	fi
+	@if [ -f ./workspace/$(PLATFORM)/cores/output/race_libretro.so ]; then \
+		cp ./workspace/$(PLATFORM)/cores/output/race_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/NGP.pak; \
+		cp ./workspace/$(PLATFORM)/cores/output/race_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/NGPC.pak; \
+	else \
+		echo "Warning: race_libretro.so not found, skipping"; \
+	fi
+	@if [ -f ./workspace/$(PLATFORM)/cores/output/fbneo_libretro.so ]; then \
+		cp ./workspace/$(PLATFORM)/cores/output/fbneo_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/FBN.pak; \
+	else \
+		echo "Warning: fbneo_libretro.so not found, skipping"; \
+	fi
+	@if [ -f ./workspace/$(PLATFORM)/cores/output/mednafen_supafaust_libretro.so ]; then \
+		cp ./workspace/$(PLATFORM)/cores/output/mednafen_supafaust_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/SUPA.pak; \
+	else \
+		echo "Warning: mednafen_supafaust_libretro.so not found, skipping"; \
+	fi
+	@if [ -f ./workspace/$(PLATFORM)/cores/output/mednafen_vb_libretro.so ]; then \
+		cp ./workspace/$(PLATFORM)/cores/output/mednafen_vb_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/VB.pak; \
+	else \
+		echo "Warning: mednafen_vb_libretro.so not found, skipping"; \
+	fi
+	@if [ -f ./workspace/$(PLATFORM)/cores/output/cap32_libretro.so ]; then \
+		cp ./workspace/$(PLATFORM)/cores/output/cap32_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/CPC.pak; \
+	else \
+		echo "Warning: cap32_libretro.so not found, skipping"; \
+	fi
+	@if [ -f ./workspace/$(PLATFORM)/cores/output/puae2021_libretro.so ]; then \
+		cp ./workspace/$(PLATFORM)/cores/output/puae2021_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/PUAE.pak; \
+	else \
+		echo "Warning: puae2021_libretro.so not found, skipping"; \
+	fi
+	@if [ -f ./workspace/$(PLATFORM)/cores/output/prboom_libretro.so ]; then \
+		cp ./workspace/$(PLATFORM)/cores/output/prboom_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/PRBOOM.pak; \
+	else \
+		echo "Warning: prboom_libretro.so not found, skipping"; \
+	fi
+	@if [ -f ./workspace/$(PLATFORM)/cores/output/vice_x64_libretro.so ]; then \
+		cp ./workspace/$(PLATFORM)/cores/output/vice_x64_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/C64.pak; \
+	else \
+		echo "Warning: vice_x64_libretro.so not found, skipping"; \
+	fi
+	@if [ -f ./workspace/$(PLATFORM)/cores/output/vice_x128_libretro.so ]; then \
+		cp ./workspace/$(PLATFORM)/cores/output/vice_x128_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/C128.pak; \
+	else \
+		echo "Warning: vice_x128_libretro.so not found, skipping"; \
+	fi
+	@if [ -f ./workspace/$(PLATFORM)/cores/output/vice_xplus4_libretro.so ]; then \
+		cp ./workspace/$(PLATFORM)/cores/output/vice_xplus4_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/PLUS4.pak; \
+	else \
+		echo "Warning: vice_xplus4_libretro.so not found, skipping"; \
+	fi
+	@if [ -f ./workspace/$(PLATFORM)/cores/output/vice_xpet_libretro.so ]; then \
+		cp ./workspace/$(PLATFORM)/cores/output/vice_xpet_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/PET.pak; \
+	else \
+		echo "Warning: vice_xpet_libretro.so not found, skipping"; \
+	fi
+	@if [ -f ./workspace/$(PLATFORM)/cores/output/vice_xvic_libretro.so ]; then \
+		cp ./workspace/$(PLATFORM)/cores/output/vice_xvic_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/VIC.pak; \
+	else \
+		echo "Warning: vice_xvic_libretro.so not found, skipping"; \
+	fi
 endif
 
 common: build system cores
@@ -214,4 +303,38 @@ package: tidy
 	# ----------------------------------------------------
 	# $@
 	@echo "$(PLATFORMS)" | grep -q "\b$@\b" && (make common PLATFORM=$@) || (exit 1)
+
+build-essential-cores:
+	# Build only essential, stable cores
+	make build-core PLATFORM=$(PLATFORM) CORE=fceumm || echo "Warning: fceumm failed"
+	make build-core PLATFORM=$(PLATFORM) CORE=gambatte || echo "Warning: gambatte failed"
+	make build-core PLATFORM=$(PLATFORM) CORE=gpsp || echo "Warning: gpsp failed"
+	make build-core PLATFORM=$(PLATFORM) CORE=picodrive || echo "Warning: picodrive failed"
+	make build-core PLATFORM=$(PLATFORM) CORE=snes9x || echo "Warning: snes9x failed"
+	make build-core PLATFORM=$(PLATFORM) CORE=mgba || echo "Warning: mgba failed"
 	
+build-all-safe:
+	# Build everything with safe error handling
+	@echo "Building NextUI with essential cores..."
+	make build PLATFORM=$(PLATFORM)
+	make build-essential-cores PLATFORM=$(PLATFORM)
+	make system PLATFORM=$(PLATFORM)
+	make cores PLATFORM=$(PLATFORM)
+	@echo "Build completed!"
+
+full-build:
+	# Complete build process from start to finish
+	make setup
+	make build-all-safe PLATFORM=$(PLATFORM)
+	make special
+	make package
+	make done
+
+build-stable-cores:
+	# Skip known problematic cores like fake-08
+	@echo "Building stable cores only..."
+	@$(foreach core,fceumm gambatte gpsp picodrive snes9x mgba pcsx_rearmed mednafen_pce_fast pokemini race mednafen_vb, \
+		echo "Building $(core)..." && \
+		(make build-core PLATFORM=$(PLATFORM) CORE=$(core) || echo "Warning: $(core) failed, continuing...") && )
+	@echo "Stable cores build completed"
+

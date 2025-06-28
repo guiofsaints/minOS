@@ -5224,6 +5224,7 @@ static Uint32 *rgbaBufferPool[RGBA_BUFFER_POOL_SIZE] = {NULL, NULL, NULL};
 static size_t rgbaBufferSizes[RGBA_BUFFER_POOL_SIZE] = {0, 0, 0};
 static int currentBufferIndex = 0;
 static size_t maxRgbaDataSize = 0;
+static Uint32 *rgbaData = NULL;
 
 static void video_refresh_callback(const void *data, unsigned width, unsigned height, size_t pitch)
 {
@@ -5394,10 +5395,6 @@ static size_t audio_sample_batch_callback(const int16_t *data, size_t frames)
 		return SND_batchSamples((const SND_Frame *)data, frames);
 	}
 }
-else return frames;
-// return frames;
-}
-;
 
 ///////////////////////////////////////
 
@@ -7541,8 +7538,9 @@ static void Menu_loop(void)
 				else
 				{
 					int old_scaling = screen_scaling;
+					int old_scale_factor = screen_scale_factor;
 					Menu_options(&options_menu);
-					if (screen_scaling != old_scaling)
+					if (screen_scaling != old_scaling || screen_scale_factor != old_scale_factor)
 					{
 						selectScaler(renderer.true_w, renderer.true_h, renderer.src_p);
 

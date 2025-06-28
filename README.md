@@ -219,14 +219,12 @@ git push origin feature/amazing-feature
 
 ---
 
-## 📄 Documentation
+## 📖 Documentation
 
-| Document | Description |
-|----------|-------------|
-| [DOCS.md](DOCS.md) | Complete technical analysis |
-| [PAKS.md](PAKS.md) | PAK system documentation |
-| [DOCKER.md](DOCKER.md) | Development environment setup |
-| [copilot-instructions.md](copilot-instructions.md) | AI coding guidelines |
+- **[Build Guide](BUILD.md)** - Complete build process documentation
+- **[Quick Build](QUICK_BUILD.md)** - TL;DR build commands
+- **[Developer Docs](DOCS.md)** - Technical documentation
+- **[PAK System](PAKS.md)** - Emulator package system
 
 ---
 
