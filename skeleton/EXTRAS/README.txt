@@ -1,4 +1,4 @@
-MinUI is a minimal launcher for the RGB30, Trimui Smart (and Pro), Miyoo Mini (and Plus), M17, and RG35XX--all from the same SD card. Why? Why not?
+NextUI is a high-performance custom firmware for Trimui Smart (and Pro) and Brick devices. Focus on performance, user experience, and advanced features.
 
 Source:
 https://github.com/shauninman/minui

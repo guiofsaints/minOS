@@ -2749,11 +2749,12 @@ $(eval $(call TEMPLATE,pcsx_rearmed)) # PlayStation
 
 ### 📈 **Pontos Fortes do Projeto**
 
-#### ✅ **Arquitetura Sólida**
+#### ✅ **Arquitetura Sólida e Simplificada**
 - **Separação de responsabilidades clara** entre UI, emulação, hardware e configuração
-- **Abstração de plataforma robusta** permitindo suporte multi-device
+- **Abstração de plataforma robusta** com foco no TG5040 (Trimui Smart Pro/Brick)
 - **Threading architecture avançada** com performance otimizada
 - **Sistema modular extensível** via PAKs com 3 níveis de integração
+- **Plataformas simplificadas**: Foco no TG5040 + Desktop para desenvolvimento
 
 #### ✅ **Performance e Otimização**
 - **Latência ultra-baixa** (~20ms) através de threading dedicado
@@ -2767,6 +2768,7 @@ $(eval $(call TEMPLATE,pcsx_rearmed)) # PlayStation
 - **Game switcher inovador** estilo console moderno
 - **Sistema de configuração intuitivo** com live preview
 - **Integração hardware completa** (WiFi, LEDs, battery, vibration)
+- **Suporte focado** para família TrimUI com otimizações específicas
 
 #### ✅ **Ecossistema de Desenvolvimento**
 - **Build system robusto** com Docker toolchains

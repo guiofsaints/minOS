@@ -4,8 +4,55 @@ BASE
 
 - tg3040: removed (merged into tg5040)
 - tg5040: improved audio quality (thanks maxbize)
-- miyoomini: added rtc support, see README.txt (thanks sinedied)
 - all: renamed "Thread Core" to "Prioritize Audio" (describe utility not implementation)
+
+EXTRAS
+
+- tg3040: removed (merged into tg5040)
+- tg5040: added Files.pak
+
+---
+
+minarch
+	can I ignore shortcut combo key input when shortcut is triggered?
+		eg. PAD_cancel(BTN_NAME)
+		the trick is ignoring the release
+
+h700/a133
+	the power/shutdown issues are becoming a nuisance
+		ry said it fake powered down during auto-poweroff?
+		also affects paks that attempt to reboot, eg.
+			panel fix
+			swap keys
+		it must have something to do with some control loop not being broken properly
+			caused by systemd restarting the ui loop?
+			check dmenu.bin or dmenu_ln
+				no loop, just calls NextUI.pak/launch.sh directly
+				check higher, what's changed?
+			check PLAT_powerOff()
+				looks fine (breaks MinUI loop and exits)
+
+Simplified platform support
+	NextUI now focuses on TG5040 family (Trimui Smart Pro, Brick)
+	Removed legacy platforms for simplified maintenance and development
+	Desktop platform maintained for development/testing
+
+Threading improvements needed
+	Consider consolidating background workers
+	Optimize producer-consumer patterns
+	Reduce memory allocations in hot paths
+	
+Performance optimization targets
+	Audio latency reduction
+	UI responsiveness improvements
+	Memory footprint optimization
+	Battery life improvements
+
+Future development
+	Enhanced shader system
+	Improved configuration management
+	Better debugging tools
+	Automated testing framework
 
 EXTRAS
 

@@ -246,7 +246,6 @@ endif
 
 ### Legacy Code to Avoid
 - ❌ SDL 1.2 patterns (use SDL2 exclusively for new code)
-- ❌ Unmaintained platform code (check `_unmaintained/` folder)
 - ❌ Direct OpenGL calls without shader abstraction
 
 ## 🧪 Testing Patterns

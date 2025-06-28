@@ -66,16 +66,12 @@
 | **TrimUI Brick** | `tg5040` | 🟢 Primary | Excellent |
 | **Desktop** | `desktop` | 🟡 Development | Testing only |
 
-### 🔒 **Legacy Support** (Unmaintained)
-- Miyoo Mini/Plus, RG35XX family, RGB30, M17, GKD Pixel
-- *Available in `_unmaintained/` for community maintenance*
-
 ---
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Supported TrimUI device
+- Supported TrimUI device (Smart Pro or Brick)
 - MicroSD card (16GB+ recommended)
 - Windows/macOS/Linux computer for setup
 
