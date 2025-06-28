@@ -93,10 +93,7 @@ make build-core PLATFORM=tg5040 CORE=snes9x
 make build-core PLATFORM=tg5040 CORE=pcsx_rearmed
 ```
 
-#### Cores Extras (Podem ter problemas):
-- **fake-08**: PICO-8 (requer dependências específicas)
-- **fbneo**: Arcade
-- **vice_***: Commodore (C64, C128, VIC-20, etc.)
+#### Cores Extras:
 - **mednafen_***: Múltiplos sistemas
 
 ### 4. Instalação do Sistema (`make system`)
@@ -123,7 +120,6 @@ cp gpsp_libretro.so
 
 # Cores extras (EXTRAS/Emus/tg5040/)
 cp mgba_libretro.so EXTRAS/Emus/tg5040/MGBA.pak/
-cp fake08_libretro.so EXTRAS/Emus/tg5040/P8.pak/
 [...]
 ```
 
@@ -209,13 +205,7 @@ CFLAGS += -DUSE_SDL2 -DUSE_GLES -DGL_GLEXT_PROTOTYPES
 
 ### Erros Comuns
 
-#### 1. Core fake-08 falha
-```
-Error: No rule to make target '../../libs/z8lua/eris.o'
-```
-**Solução**: Use `make build-essential-cores` ao invés de `make build-cores`
-
-#### 2. Git ownership em Docker
+#### 1. Git ownership em Docker
 ```
 fatal: detected dubious ownership in repository
 ```

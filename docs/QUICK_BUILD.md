@@ -37,16 +37,10 @@ make special && make package && make done
 - `snes9x` (Super Nintendo)
 - `pcsx_rearmed` (PlayStation 1)
 
-⚠️ **Podem dar problema:**
-- `fake-08` (PICO-8)
-- `fbneo` (Arcade)
-- `vice_*` (Commodore)
-
 ## 🔧 Solução de Problemas
 
 | Erro | Solução |
 |------|---------|
-| `fake-08` falha compilação | Use `build-essential-cores` |
 | Git ownership error | Já corrigido automaticamente |
 | Core não encontrado | Normal, use verificações condicionais |
 

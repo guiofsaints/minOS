@@ -32,17 +32,8 @@
 # *_BUILD_PATH=
 # *_SUBMODULES=
 
-fbneo_REPO = https://github.com/libretro/FBNeo
-fbneo_CORE = fbneo_libretro.so
-fbneo_BUILD_PATH = fbneo/src/burner/libretro
-fbneo_MAKE = make
-
 mednafen_pce_fast_REPO = https://github.com/libretro/beetle-pce-fast-libretro
 mednafen_vb_REPO = https://github.com/libretro/beetle-vb-libretro
-
-fake-08_REPO = https://github.com/jtothebell/fake-08
-fake-08_CORE = fake08_libretro.so
-fake-08_BUILD_PATH = fake-08/platform/libretro
 
 fceumm_REPO = https://github.com/libretro/libretro-fceumm
 
@@ -79,26 +70,6 @@ libretro-uae_CORE = puae2021_libretro.so
 
 libretro-cap32_REPO = https://github.com/libretro/libretro-cap32
 libretro-cap32_CORE = cap32_libretro.so
-
-c64_REPO  = https://github.com/libretro/vice-libretro
-c64_CORE  = vice_x64_libretro.so
-c64_FLAGS = EMUTYPE=x64
-
-c128_REPO  = https://github.com/libretro/vice-libretro
-c128_CORE  = vice_x128_libretro.so
-c128_FLAGS = EMUTYPE=x128
-
-vic_REPO  = https://github.com/libretro/vice-libretro
-vic_CORE  = vice_xvic_libretro.so
-vic_FLAGS = EMUTYPE=xvic
-
-pet_REPO  = https://github.com/libretro/vice-libretro
-pet_CORE  = vice_xpet_libretro.so
-pet_FLAGS = EMUTYPE=xpet
-
-plus4_REPO  = https://github.com/libretro/vice-libretro
-plus4_CORE  = vice_xplus4_libretro.so
-plus4_FLAGS = EMUTYPE=xplus4
 
 ###############################
 

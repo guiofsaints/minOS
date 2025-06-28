@@ -145,11 +145,6 @@ cores: # TODO: can't assume every platform will have the same stock cores (platf
 	fi
 	
 	# extras - checking if files exist before copying
-	@if [ -f ./workspace/$(PLATFORM)/cores/output/fake08_libretro.so ]; then \
-		cp ./workspace/$(PLATFORM)/cores/output/fake08_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/P8.pak; \
-	else \
-		echo "Warning: fake08_libretro.so not found, skipping"; \
-	fi
 	@if [ -f ./workspace/$(PLATFORM)/cores/output/mgba_libretro.so ]; then \
 		cp ./workspace/$(PLATFORM)/cores/output/mgba_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/MGBA.pak; \
 		cp ./workspace/$(PLATFORM)/cores/output/mgba_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/SGB.pak; \
@@ -171,11 +166,6 @@ cores: # TODO: can't assume every platform will have the same stock cores (platf
 		cp ./workspace/$(PLATFORM)/cores/output/race_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/NGPC.pak; \
 	else \
 		echo "Warning: race_libretro.so not found, skipping"; \
-	fi
-	@if [ -f ./workspace/$(PLATFORM)/cores/output/fbneo_libretro.so ]; then \
-		cp ./workspace/$(PLATFORM)/cores/output/fbneo_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/FBN.pak; \
-	else \
-		echo "Warning: fbneo_libretro.so not found, skipping"; \
 	fi
 	@if [ -f ./workspace/$(PLATFORM)/cores/output/mednafen_supafaust_libretro.so ]; then \
 		cp ./workspace/$(PLATFORM)/cores/output/mednafen_supafaust_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/SUPA.pak; \
@@ -201,31 +191,6 @@ cores: # TODO: can't assume every platform will have the same stock cores (platf
 		cp ./workspace/$(PLATFORM)/cores/output/prboom_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/PRBOOM.pak; \
 	else \
 		echo "Warning: prboom_libretro.so not found, skipping"; \
-	fi
-	@if [ -f ./workspace/$(PLATFORM)/cores/output/vice_x64_libretro.so ]; then \
-		cp ./workspace/$(PLATFORM)/cores/output/vice_x64_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/C64.pak; \
-	else \
-		echo "Warning: vice_x64_libretro.so not found, skipping"; \
-	fi
-	@if [ -f ./workspace/$(PLATFORM)/cores/output/vice_x128_libretro.so ]; then \
-		cp ./workspace/$(PLATFORM)/cores/output/vice_x128_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/C128.pak; \
-	else \
-		echo "Warning: vice_x128_libretro.so not found, skipping"; \
-	fi
-	@if [ -f ./workspace/$(PLATFORM)/cores/output/vice_xplus4_libretro.so ]; then \
-		cp ./workspace/$(PLATFORM)/cores/output/vice_xplus4_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/PLUS4.pak; \
-	else \
-		echo "Warning: vice_xplus4_libretro.so not found, skipping"; \
-	fi
-	@if [ -f ./workspace/$(PLATFORM)/cores/output/vice_xpet_libretro.so ]; then \
-		cp ./workspace/$(PLATFORM)/cores/output/vice_xpet_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/PET.pak; \
-	else \
-		echo "Warning: vice_xpet_libretro.so not found, skipping"; \
-	fi
-	@if [ -f ./workspace/$(PLATFORM)/cores/output/vice_xvic_libretro.so ]; then \
-		cp ./workspace/$(PLATFORM)/cores/output/vice_xvic_libretro.so ./build/EXTRAS/Emus/$(PLATFORM)/VIC.pak; \
-	else \
-		echo "Warning: vice_xvic_libretro.so not found, skipping"; \
 	fi
 endif
 
@@ -331,7 +296,7 @@ full-build:
 	make done
 
 build-stable-cores:
-	# Skip known problematic cores like fake-08
+	# Build only essential stable cores
 	@echo "Building stable cores only..."
 	@$(foreach core,fceumm gambatte gpsp picodrive snes9x mgba pcsx_rearmed mednafen_pce_fast pokemini race mednafen_vb, \
 		echo "Building $(core)..." && \
