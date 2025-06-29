@@ -1760,10 +1760,12 @@ scaler_t PLAT_getScaler(GFX_Renderer *renderer)
 void setRectToAspectRatio(SDL_Rect *dst_rect)
 {
 	// Use the calculated destination dimensions from renderer which include scale_factor
-	int x = vid.blit->dst_x;
-	int y = vid.blit->dst_y;
 	int w = vid.blit->dst_w;
 	int h = vid.blit->dst_h;
+
+	// Center the scaled image on the device screen
+	int x = (device_width - w) / 2;
+	int y = (device_height - h) / 2;
 
 	// Apply screen offsets
 	dst_rect->x = x + screenx;

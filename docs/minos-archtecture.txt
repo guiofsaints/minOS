@@ -1,0 +1,186 @@
+title NextUI System Architecture
+
+NextUI System [icon: layers] {
+  // User Interface Layer
+  User Interface Layer [icon: monitor, color: blue] {
+    NextUI Main UI [icon: layout, label: "NextUI (Main UI)"]
+    Settings System [icon: settings]
+    Game Time Tracking [icon: clock]
+  }
+
+  // Core Services Layer
+  Core Services Layer [icon: cpu, color: green] {
+    MinArch Emulation [icon: gamepad, label: "MinArch (Emulation)"]
+    Battery Monitoring [icon: battery-charging]
+    Audio Engine [icon: music, label: "Audio Engine (libsamplerate)"]
+  }
+
+  // Common API Layer
+  Common API Layer [icon: code, color: orange] {
+    Graphics API [icon: image, label: "Graphics API (SDL2/GL)"]
+    Threading API [icon: shuffle, label: "Threading API (pthreads)"]
+    Storage API [icon: database, label: "Storage API (SQLite)"]
+  }
+
+  // Hardware Abstraction Layer (HAL)
+  Hardware Abstraction Layer [icon: cpu, color: purple] {
+    Platform API [icon: server]
+    Input Layer [icon: keyboard]
+    Device Drivers [icon: cpu, label: "Device Drivers (GPIO/I2C)"]
+  }
+
+  // Hardware Layer
+  Hardware Layer [icon: cpu, color: gray] {
+    TrimUI SoC [icon: cpu, label: "TrimUI SoC (ARM Cortex)"]
+    Audio DAC [icon: volume-2]
+    LED GPIO Controllers [icon: activity, label: "LED/GPIO Controllers"]
+  }
+}
+
+// Threading Model
+Threads [icon: activity, color: yellow] {
+  Main UI Thread [icon: user, label: "Main UI Thread"]
+  Background Load Thread [icon: refresh-cw, label: "Background Load Thread"]
+  Animation Thread [icon: film, label: "Animation Thread"]
+  Audio Thread [icon: music, label: "Audio Thread"]
+  CPU Monitor Thread [icon: thermometer, label: "CPU Monitor Thread"]
+  System Service Threads [icon: settings, label: "System Service Threads"]
+}
+
+// Processing Pipelines
+Pipelines [icon: shuffle, color: red] {
+  // ROM Loading Pipeline
+  ROM Loading Pipeline [icon: folder, color: blue] {
+    User Selection [icon: user]
+    Background Scanner [icon: search]
+    Thumbnail Loader [icon: image]
+    UI Update [icon: refresh-cw]
+  }
+
+  // Audio Pipeline
+  Audio Pipeline [icon: music, color: green] {
+    Libretro Core [icon: gamepad]
+    Libsamplerate [icon: music, label: "libsamplerate"]
+    SDL Audio [icon: volume-2]
+    Hardware DAC [icon: volume-2, label: "Audio DAC"]
+  }
+
+  // Graphics Pipeline
+  Graphics Pipeline [icon: image, color: orange] {
+    Game Frame [icon: play]
+    Shader Pipeline [icon: code]
+    Compositor [icon: layers]
+    Display [icon: monitor]
+  }
+
+  // Configuration System
+  Configuration System [icon: settings, color: purple] {
+    Global Settings [icon: globe]
+    Platform Settings [icon: server]
+    "Per-core Settings" [icon: cpu]
+    Configuration API [icon: code]
+  }
+
+  // Error Handling and Logging
+  Error Handling and Logging [icon: alert-triangle, color: gray] {
+    Hardware Level [icon: cpu]
+    System Level [icon: server]
+    Application Level [icon: layout]
+    User Level [icon: user]
+    Logging Framework [icon: file-text]
+  }
+}
+
+// Connections: Layered vertical dependencies
+User Interface Layer > Core Services Layer
+Core Services Layer > Common API Layer
+Common API Layer > Hardware Abstraction Layer
+Hardware Abstraction Layer > Hardware Layer
+
+// Threading Model connections to modules
+Background Load Thread > ROM Loading Pipeline
+Animation Thread > Graphics Pipeline
+Audio Thread > Audio Pipeline
+
+// ROM Loading Pipeline connections
+User Selection > Background Scanner
+Background Scanner > Thumbnail Loader
+Thumbnail Loader > UI Update
+
+// Audio Pipeline connections
+Libretro Core > Libsamplerate
+Libsamplerate > SDL Audio
+SDL Audio > Hardware DAC
+
+// Graphics Pipeline connections
+Game Frame > Shader Pipeline
+Shader Pipeline > Compositor
+Compositor > Display
+
+// Configuration System flow
+Global Settings > Platform Settings
+Platform Settings > "Per-core Settings"
+"Per-core Settings" > Configuration API
+
+// Error Handling and Logging flow
+Hardware Level > System Level
+System Level > Application Level
+Application Level > User Level
+Logging Framework > User Level
+
+// Data flow: UI triggers ROM loading
+
+// Data flow: UI triggers audio/graphics
+NextUI Main UI > Graphics Pipeline
+MinArch Emulation > Audio Pipeline
+
+// Core Services to APIs
+
+// APIs to HAL
+
+// HAL to Hardware
+Platform API > TrimUI SoC
+Input Layer > TrimUI SoC
+Device Drivers > LED GPIO Controllers
+Device Drivers > Audio DAC
+
+// Battery Monitoring to System Service Threads
+
+// CPU Monitor Thread to Core Services Layer
+
+// Animation Thread to Graphics API
+
+// Background Load Thread to Storage API
+
+// UI Update to Main UI Thread
+
+// Error Handling: upward flow
+Hardware Level > System Level
+System Level > Application Level
+Application Level > User Level
+Common API Layer > Platform API
+Common API Layer > Platform API
+Common API Layer > Platform API
+NextUI Main UI < Main UI Thread
+NextUI Main UI < Animation Thread
+Audio Engine < Audio Thread
+Core Services Layer < CPU Monitor Thread
+Hardware Abstraction Layer < System Service Threads
+NextUI Main UI < UI Update
+Core Services Layer < Configuration API
+User Interface Layer < Configuration API
+Hardware Level < Logging Framework
+System Level < Logging Framework
+Application Level < Logging Framework
+User Selection < NextUI Main UI
+Libretro Core < MinArch Emulation
+Game Frame < MinArch Emulation
+Libsamplerate < Audio Engine
+System Service Threads < Battery Monitoring
+Graphics API < Animation Thread
+Storage API < Background Load Thread
+Main UI Thread < UI Update
+Hardware Level < Hardware Layer
+Common API Layer < MinArch Emulation
+MinArch Emulation < CPU Monitor Thread
+Battery Monitoring < CPU Monitor Thread
