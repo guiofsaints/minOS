@@ -40,16 +40,40 @@ NextUI consists of several core components:
 | **tg5040** | ✅ Primary | TrimUI Smart Pro/Brick |
 | **desktop** | 🟡 Development | Testing and development only |
 
-## Quick Links
+## Documentation
 
-- [Architecture Overview](architecture.md) - System design and component interaction
-- [Module Documentation](modules.md) - Detailed module descriptions
-- [API Reference](api-reference.md) - Public function documentation
-- [Memory Map](memory-map.md) - Firmware memory layout
-- [Interrupts](interrupts.md) - Interrupt handling
-- [Boot Process](boot-process.md) - System initialization
-- [Hardware Abstraction](hardware-abstraction.md) - HAL description
-- [Error Handling](error-handling.md) - Error management strategies
+### 📚 **Complete Documentation Suite**
+
+**Core Architecture & Design:**
+- [📋 Architecture Overview](docs/architecture.md) - System design, threading model, and component interaction
+- [🔧 Module Documentation](docs/modules.md) - Detailed breakdown of all system modules and dependencies
+- [🔌 Hardware Abstraction](docs/hardware-abstraction.md) - HAL design and platform abstraction layer
+- [🚀 Boot Process](docs/boot-process.md) - Step-by-step system initialization and startup sequence
+
+**Development & Technical Reference:**
+- [📖 API Reference](docs/api-reference.md) - Complete public function documentation with examples
+- [💾 Memory Map](docs/memory-map.md) - Firmware memory layout and allocation strategies
+- [⚡ Interrupts](docs/interrupts.md) - Interrupt handling, signals, and hardware events
+- [❌ Error Handling](docs/error-handling.md) - Error codes, logging system, and recovery mechanisms
+
+**Build & Development:**
+- [🛠️ Build System Guide](docs/build.md) - Comprehensive build documentation with Docker toolchain
+- [⚡ Quick Build Guide](docs/build-quick.md) - Fast build commands and essential cores
+- [🎨 Assets & Customization Map](docs/assets-map.md) - Complete guide for rebranding and customization
+
+**PAK System:**
+- [📦 PAK Documentation](docs/PAKS.md) - Emulator PAK system, creation, and integration guide
+
+### 🎯 **Quick Navigation**
+
+| Topic | Documentation | Description |
+|-------|---------------|-------------|
+| **Getting Started** | [build-quick.md](docs/build-quick.md) | Fast build and essential commands |
+| **System Design** | [architecture.md](docs/architecture.md) | Threading, HAL, component design |
+| **Development** | [api-reference.md](docs/api-reference.md) | Function reference and examples |
+| **Customization** | [assets-map.md](docs/assets-map.md) | Branding and rebranding guide |
+| **Hardware** | [hardware-abstraction.md](docs/hardware-abstraction.md) | Platform abstraction layer |
+| **Troubleshooting** | [error-handling.md](docs/error-handling.md) | Error codes and debugging |
 
 ## Build Instructions
 
