@@ -1,13 +1,13 @@
-# NextUI Boot Process
+# minOS Boot Process
 
 ## Overview
 
-NextUI follows a multi-stage boot process designed for embedded Linux systems, primarily targeting TrimUI devices. The boot sequence is optimized for fast startup times while ensuring proper hardware initialization and system stability.
+minOS follows a multi-stage boot process designed for embedded Linux systems, primarily targeting TrimUI devices. The boot sequence is optimized for fast startup times while ensuring proper hardware initialization and system stability.
 
 ## Boot Architecture
 
 ```
-Power On → Hardware Init → Bootloader → Linux Kernel → Init System → NextUI
+Power On → Hardware Init → Bootloader → Linux Kernel → Init System → minOS
     ↓           ↓             ↓           ↓             ↓           ↓
    ~0ms      ~500ms        ~2s         ~8s          ~12s       ~15s
 ```
@@ -65,7 +65,7 @@ setenv silent 1
 ## Stage 3: Linux Kernel Boot (2s-8s)
 
 ### Kernel Configuration
-NextUI uses a minimal kernel configuration optimized for:
+minOS uses a minimal kernel configuration optimized for:
 - Fast boot times
 - Low memory usage
 - Essential hardware support
@@ -114,7 +114,7 @@ The init system starts core services in order:
 
 ```bash
 #!/bin/sh
-# /etc/init.d/nextui-boot
+# /etc/init.d/minos-boot
 
 # Mount essential filesystems
 mount -t proc proc /proc
@@ -165,10 +165,10 @@ int init_hardware_services(void) {
 }
 ```
 
-## Stage 5: NextUI Initialization (12s-15s)
+## Stage 5: minOS Initialization (12s-15s)
 
 ### Pre-Launch Setup
-Before NextUI starts, the system performs final preparation:
+Before minOS starts, the system performs final preparation:
 
 ```bash
 #!/bin/sh
@@ -192,12 +192,12 @@ echo 0 > /sys/class/led_anim/max_scale  # Turn off LEDs
 trimui_inputd &  # Start input daemon
 ```
 
-### NextUI Application Boot
+### minOS Application Boot
 
 #### Phase 1: Core System Initialization
 ```c
 int main(int argc, char *argv[]) {
-    LOG_info("NextUI starting...");
+    LOG_info("minOS starting...");
     
     // Initialize settings system
     InitSettings();
@@ -222,7 +222,7 @@ int main(int argc, char *argv[]) {
     signal(SIGINT, sigHandler);
     signal(SIGTERM, sigHandler);
     
-    return nextui_main_loop();
+    return minos_main_loop();
 }
 ```
 

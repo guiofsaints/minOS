@@ -1,8 +1,8 @@
 # minOS Documentation
 
-## ONextUI consists of several core components:
+## minOS consists of several core components:
 
-- **NextUI** - Main user interface (C + SDL2 + OpenGL, ~2800 LOC)view
+- **minOS** - Main user interface (C + SDL2 + OpenGL, ~2800 LOC)view
 
 minOS is a high-performance custom firmware for portable retro gaming devices, primarily targeting the TrimUI family (Brick/Smart Pro). Built on MinUI foundation with a completely rebuilt emulation engine, minOS delivers modern user experience with low-level optimizations.
 

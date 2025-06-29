@@ -1,8 +1,8 @@
-# GitHub Copilot Instructions - NextUI Project
+# GitHub Copilot Instructions - minOS Project
 
 ## 🎯 Project Overview
 
-NextUI is a high-performance Custom Firmware (CFW) based on MinUI with a completely rebuilt emulation engine for portable retro gaming devices. It primarily targets the **TrimUI family** (Brick/Smart Pro) offering modern user experience with low-level optimizations.
+minOS is a high-performance Custom Firmware (CFW) based on MinUI with a completely rebuilt emulation engine for portable retro gaming devices. It primarily targets the **TrimUI family** (Brick/Smart Pro) offering modern user experience with low-level optimizations.
 
 ### Key Technologies
 - **Languages**: C (90%), C++ (8%), Shell (2%)
@@ -18,7 +18,7 @@ NextUI is a high-performance Custom Firmware (CFW) based on MinUI with a complet
 ```
 workspace/
 ├── all/                    # Cross-platform components
-│   ├── nextui/            # UI layer (~2800 LOC)
+│   ├── minos/            # UI layer (~2800 LOC)
 │   ├── minarch/           # Emulation engine (~7100 LOC)
 │   ├── settings/          # Configuration system (C++)
 │   ├── common/            # Shared library & APIs
@@ -295,7 +295,7 @@ int test_config_system(void) {
 - `workspace/{platform}/platform/platform.h` - Platform interface
 
 ### Important Sources
-- `workspace/all/nextui/nextui.c` - Main UI (~2800 LOC)
+- `workspace/all/minos/minos.c` - Main UI (~2800 LOC)
 - `workspace/all/minarch/minarch.c` - Emulation engine (~7100 LOC)
 - `workspace/all/settings/settings.cpp` - Settings UI
 - `workspace/{platform}/platform/platform.c` - Hardware abstraction
@@ -329,4 +329,4 @@ int test_config_system(void) {
 
 ---
 
-*This file should be used as a reference for GitHub Copilot to understand NextUI project structure, coding standards, and best practices. Update as the project evolves.*
+*This file should be used as a reference for GitHub Copilot to understand minOS project structure, coding standards, and best practices. Update as the project evolves.*

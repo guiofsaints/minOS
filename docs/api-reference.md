@@ -1,4 +1,4 @@
-# NextUI API Reference
+# minOS API Reference
 
 ## Graphics API
 

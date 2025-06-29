@@ -15,6 +15,97 @@
 #include <pthread.h>
 
 ///////////////////////////////////////
+// Memory Pool System for Performance Optimization
+///////////////////////////////////////
+
+#define ARRAY_POOL_SIZE 64
+#define ENTRY_POOL_SIZE 256
+#define DIRECTORY_POOL_SIZE 32
+
+typedef struct MemoryPool
+{
+	void **available;
+	int count;
+	int capacity;
+	size_t item_size;
+	pthread_mutex_t mutex;
+} MemoryPool;
+
+static MemoryPool array_pool = {0};
+static MemoryPool entry_pool = {0};
+static MemoryPool directory_pool = {0};
+
+static void initMemoryPool(MemoryPool *pool, int capacity, size_t item_size)
+{
+	pool->available = malloc(sizeof(void *) * capacity);
+	pool->count = 0;
+	pool->capacity = capacity;
+	pool->item_size = item_size;
+	pthread_mutex_init(&pool->mutex, NULL);
+}
+
+static void *poolAlloc(MemoryPool *pool)
+{
+	pthread_mutex_lock(&pool->mutex);
+	if (LIKELY(pool->count > 0))
+	{
+		void *item = pool->available[--pool->count];
+		pthread_mutex_unlock(&pool->mutex);
+		return item;
+	}
+	pthread_mutex_unlock(&pool->mutex);
+	return malloc(pool->item_size);
+}
+
+static void poolFree(MemoryPool *pool, void *item)
+{
+	if (UNLIKELY(!item))
+		return;
+
+	pthread_mutex_lock(&pool->mutex);
+	if (LIKELY(pool->count < pool->capacity))
+	{
+		pool->available[pool->count++] = item;
+		pthread_mutex_unlock(&pool->mutex);
+		return;
+	}
+	pthread_mutex_unlock(&pool->mutex);
+	free(item);
+}
+
+static void initMemoryPools(void)
+{
+	initMemoryPool(&array_pool, ARRAY_POOL_SIZE, sizeof(Array));
+	initMemoryPool(&entry_pool, ENTRY_POOL_SIZE, sizeof(struct Entry));
+	initMemoryPool(&directory_pool, DIRECTORY_POOL_SIZE, sizeof(struct Directory));
+}
+
+static void cleanupMemoryPools(void)
+{
+	// Free remaining items in pools
+	for (int i = 0; i < array_pool.count; i++)
+	{
+		free(array_pool.available[i]);
+	}
+	for (int i = 0; i < entry_pool.count; i++)
+	{
+		free(entry_pool.available[i]);
+	}
+	for (int i = 0; i < directory_pool.count; i++)
+	{
+		free(directory_pool.available[i]);
+	}
+
+	free(array_pool.available);
+	free(entry_pool.available);
+	free(directory_pool.available);
+
+	pthread_mutex_destroy(&array_pool.mutex);
+	pthread_mutex_destroy(&entry_pool.mutex);
+	pthread_mutex_destroy(&directory_pool.mutex);
+}
+
+///////////////////////////////////////
 
 typedef struct Array
 {
@@ -25,7 +116,7 @@ typedef struct Array
 
 static Array *Array_new(void)
 {
-	Array *self = malloc(sizeof(Array));
+	Array *self = poolAlloc(&array_pool);
 	self->count = 0;
 	self->capacity = 8;
 	self->items = malloc(sizeof(void *) * self->capacity);
@@ -61,12 +152,22 @@ static void Array_remove(Array *self, void *item)
 {
 	if (self->count == 0 || item == NULL)
 		return;
+
+	// Find the item
 	int i = 0;
-	while (self->items[i] != item)
+	while (i < self->count && self->items[i] != item)
 		i++;
-	for (int j = i; j < self->count - 1; j++)
-		self->items[j] = self->items[j + 1];
-	self->count--;
+
+	if (i < self->count)
+	{
+		// Use memmove for better performance with larger arrays
+		self->count--;
+		if (i < self->count)
+		{
+			memmove(&self->items[i], &self->items[i + 1],
+							sizeof(void *) * (self->count - i));
+		}
+	}
 }
 static void Array_reverse(Array *self)
 {
@@ -82,10 +183,10 @@ static void Array_reverse(Array *self)
 static void Array_free(Array *self)
 {
 	free(self->items);
-	free(self);
+	poolFree(&array_pool, self);
 }
 
-static int StringArray_indexOf(Array *self, char *str)
+static int StringArray_indexOf(Array *self, const char *str)
 {
 	for (int i = 0; i < self->count; i++)
 	{
@@ -98,7 +199,7 @@ static void StringArray_free(Array *self)
 {
 	for (int i = 0; i < self->count; i++)
 	{
-		free(self->items[i]);
+		pooledStrfree(self->items[i]);
 	}
 	Array_free(self);
 }
@@ -126,8 +227,8 @@ static void Hash_free(Hash *self)
 }
 static void Hash_set(Hash *self, char *key, char *value)
 {
-	Array_push(self->keys, strdup(key));
-	Array_push(self->values, strdup(value));
+	Array_push(self->keys, pooledStrdup(key));
+	Array_push(self->values, pooledStrdup(value));
 }
 static char *Hash_get(Hash *self, char *key)
 {
@@ -158,9 +259,9 @@ static Entry *Entry_new(char *path, int type)
 {
 	char display_name[256];
 	getDisplayName(path, display_name);
-	Entry *self = malloc(sizeof(Entry));
-	self->path = strdup(path);
-	self->name = strdup(display_name);
+	Entry *self = poolAlloc(&entry_pool);
+	self->path = pooledStrdup(path);
+	self->name = pooledStrdup(display_name);
 	self->unique = NULL;
 	self->type = type;
 	self->alpha = 0;
@@ -168,14 +269,14 @@ static Entry *Entry_new(char *path, int type)
 }
 static void Entry_free(Entry *self)
 {
-	free(self->path);
-	free(self->name);
+	pooledStrfree(self->path);
+	pooledStrfree(self->name);
 	if (self->unique)
-		free(self->unique);
-	free(self);
+		pooledStrfree(self->unique);
+	poolFree(&entry_pool, self);
 }
 
-static int EntryArray_indexOf(Array *self, char *path)
+static int EntryArray_indexOf(Array *self, const char *path)
 {
 	for (int i = 0; i < self->count; i++)
 	{
@@ -185,11 +286,39 @@ static int EntryArray_indexOf(Array *self, char *path)
 	}
 	return -1;
 }
+// Optimized sorting functions for better performance
 static int EntryArray_sortEntry(const void *a, const void *b)
 {
-	Entry *item1 = *(Entry **)a;
-	Entry *item2 = *(Entry **)b;
-	return strcasecmp(item1->name, item2->name);
+	const Entry *item1 = *(const Entry **)a;
+	const Entry *item2 = *(const Entry **)b;
+
+	// Use cached comparison if possible (same string instances from string pool)
+	if (item1->name == item2->name)
+		return 0;
+
+	// Fast path for single character differences
+	const unsigned char *s1 = (const unsigned char *)item1->name;
+	const unsigned char *s2 = (const unsigned char *)item2->name;
+
+	// Optimized case-insensitive comparison with early exit
+	while (*s1 && *s2)
+	{
+		unsigned char c1 = *s1;
+		unsigned char c2 = *s2;
+
+		// Convert to lowercase using bit manipulation for ASCII
+		if (c1 >= 'A' && c1 <= 'Z')
+			c1 |= 0x20;
+		if (c2 >= 'A' && c2 <= 'Z')
+			c2 |= 0x20;
+
+		if (c1 != c2)
+			return (int)c1 - (int)c2;
+		s1++;
+		s2++;
+	}
+
+	return (int)*s1 - (int)*s2;
 }
 static void EntryArray_sort(Array *self)
 {
@@ -258,14 +387,17 @@ static void getUniqueName(Entry *entry, char *out_name)
 	char emu_tag[256];
 	getEmuName(entry->path, emu_tag);
 
-	char *tmp;
-	strcpy(out_name, entry->name);
-	tmp = out_name + strlen(out_name);
-	strcpy(tmp, " (");
-	tmp = out_name + strlen(out_name);
-	strcpy(tmp, emu_tag);
-	tmp = out_name + strlen(out_name);
-	strcpy(tmp, ")");
+	// More efficient string building using direct memory operations
+	const char *name = entry->name;
+	size_t name_len = strlen(name);
+	size_t emu_tag_len = strlen(emu_tag);
+
+	memcpy(out_name, name, name_len);
+	out_name[name_len] = ' ';
+	out_name[name_len + 1] = '(';
+	memcpy(out_name + name_len + 2, emu_tag, emu_tag_len);
+	out_name[name_len + 2 + emu_tag_len] = ')';
+	out_name[name_len + 3 + emu_tag_len] = '\0';
 }
 
 static void Directory_index(Directory *self)
@@ -297,7 +429,7 @@ static void Directory_index(Directory *self)
 					tmp[0] = '\0';
 					char *key = line;
 					char *value = tmp + 1;
-					Hash_set(map, key, strdup(value)); // Ensure strdup to store value properly
+					Hash_set(map, key, pooledStrdup(value)); // Ensure pooledStrdup to store value properly
 				}
 			}
 			fclose(file);
@@ -311,8 +443,8 @@ static void Directory_index(Directory *self)
 				char *alias = Hash_get(map, filename);
 				if (alias)
 				{
-					free(entry->name); // Free before overwriting
-					entry->name = strdup(alias);
+					pooledStrfree(entry->name); // Free before overwriting
+					entry->name = pooledStrdup(alias);
 					resort = 1;
 					if (!filter && hide(entry->name))
 						filter = 1;
@@ -354,15 +486,15 @@ static void Directory_index(Directory *self)
 			char *alias = Hash_get(map, filename);
 			if (alias)
 			{
-				free(entry->name); // Free before overwriting
-				entry->name = strdup(alias);
+				pooledStrfree(entry->name); // Free before overwriting
+				entry->name = pooledStrdup(alias);
 			}
 		}
 
 		if (prior != NULL && exactMatch(prior->name, entry->name))
 		{
-			free(prior->unique);
-			free(entry->unique);
+			pooledStrfree(prior->unique);
+			pooledStrfree(entry->unique);
 			prior->unique = NULL;
 			entry->unique = NULL;
 
@@ -375,13 +507,13 @@ static void Directory_index(Directory *self)
 				getUniqueName(prior, prior_unique);
 				getUniqueName(entry, entry_unique);
 
-				prior->unique = strdup(prior_unique);
-				entry->unique = strdup(entry_unique);
+				prior->unique = pooledStrdup(prior_unique);
+				entry->unique = pooledStrdup(entry_unique);
 			}
 			else
 			{
-				prior->unique = strdup(prior_filename);
-				entry->unique = strdup(entry_filename);
+				prior->unique = pooledStrdup(prior_filename);
+				entry->unique = pooledStrdup(entry_filename);
 			}
 		}
 
@@ -415,9 +547,9 @@ static Directory *Directory_new(char *path, int selected)
 	char display_name[256];
 	getDisplayName(path, display_name);
 
-	Directory *self = malloc(sizeof(Directory));
-	self->path = strdup(path);
-	self->name = strdup(display_name);
+	Directory *self = poolAlloc(&directory_pool);
+	self->path = pooledStrdup(path);
+	self->name = pooledStrdup(display_name);
 	if (exactMatch(path, SDCARD_PATH))
 	{
 		self->entries = getRoot();
@@ -445,11 +577,11 @@ static Directory *Directory_new(char *path, int selected)
 }
 static void Directory_free(Directory *self)
 {
-	free(self->path);
-	free(self->name);
+	pooledStrfree(self->path);
+	pooledStrfree(self->name);
 	EntryArray_free(self->entries);
 	IntArray_free(self->alphas);
-	free(self);
+	poolFree(&directory_pool, self);
 }
 
 static void DirectoryArray_pop(Array *self)
@@ -487,20 +619,20 @@ static Recent *Recent_new(char *path, char *alias)
 	char emu_name[256];
 	getEmuName(sd_path, emu_name);
 
-	self->path = strdup(path);
-	self->alias = alias ? strdup(alias) : NULL;
+	self->path = pooledStrdup(path);
+	self->alias = alias ? pooledStrdup(alias) : NULL;
 	self->available = hasEmu(emu_name);
 	return self;
 }
 static void Recent_free(Recent *self)
 {
-	free(self->path);
+	pooledStrfree(self->path);
 	if (self->alias)
-		free(self->alias);
+		pooledStrfree(self->alias);
 	free(self);
 }
 
-static int RecentArray_indexOf(Array *self, char *str)
+static int RecentArray_indexOf(Array *self, const char *str)
 {
 	for (int i = 0; i < self->count; i++)
 	{
@@ -651,12 +783,11 @@ static int hasRecents(void)
 			if (recent->available)
 				has += 1;
 			Array_push(recents, recent);
-
 			char parent_path[256];
 			strcpy(parent_path, disc_path);
 			char *tmp = strrchr(parent_path, '/') + 1;
 			tmp[0] = '\0';
-			Array_push(parent_paths, strdup(parent_path));
+			Array_push(parent_paths, pooledStrdup(parent_path));
 		}
 		unlink(CHANGE_DISC_PATH);
 	}
@@ -711,7 +842,7 @@ static int hasRecents(void)
 						if (found)
 							continue;
 
-						Array_push(parent_paths, strdup(parent_path));
+						Array_push(parent_paths, pooledStrdup(parent_path));
 					}
 
 					// LOG_info("path:%s alias:%s\n", path, alias);
@@ -848,7 +979,7 @@ static Array *getRoot(void)
 					*tmp = '\0';
 					char *key = line;
 					char *value = tmp + 1;
-					Hash_set(map, key, strdup(value)); // Ensure strdup
+					Hash_set(map, key, pooledStrdup(value)); // Ensure pooledStrdup
 				}
 			}
 			fclose(file);
@@ -861,8 +992,8 @@ static Array *getRoot(void)
 				char *alias = Hash_get(map, filename);
 				if (alias)
 				{
-					free(entry->name); // Free before overwriting
-					entry->name = strdup(alias);
+					pooledStrfree(entry->name); // Free before overwriting
+					entry->name = pooledStrdup(alias);
 					resort = 1;
 				}
 			}
@@ -938,8 +1069,8 @@ static Entry *entryFromRecent(Recent *recent)
 	Entry *entry = Entry_new(sd_path, type);
 	if (recent->alias)
 	{
-		free(entry->name);
-		entry->name = strdup(recent->alias);
+		pooledStrfree(entry->name);
+		entry->name = pooledStrdup(recent->alias);
 	}
 	return entry;
 }
@@ -1021,10 +1152,10 @@ static Array *getDiscs(char *path)
 			{
 				disc += 1;
 				Entry *entry = Entry_new(disc_path, ENTRY_ROM);
-				free(entry->name);
+				pooledStrfree(entry->name);
 				char name[16];
 				sprintf(name, "Disc %i", disc);
-				entry->name = strdup(name);
+				entry->name = pooledStrdup(name);
 				Array_push(entries, entry);
 			}
 		}
@@ -1220,6 +1351,131 @@ static char *escapeSingleQuotes(char *str)
 	// own return value (but does it need to?)
 	replaceString(str, "'", "'\\''");
 	return str;
+}
+
+///////////////////////////////////////
+
+///////////////////////////////////////
+// String Pool System for Memory Optimization
+///////////////////////////////////////
+
+#define STRING_POOL_SIZE 512
+#define STRING_HASH_SIZE 256
+
+typedef struct StringPoolEntry
+{
+	char *str;
+	int ref_count;
+	struct StringPoolEntry *next;
+} StringPoolEntry;
+
+static StringPoolEntry *string_pool[STRING_HASH_SIZE] = {0};
+static pthread_mutex_t string_pool_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+static unsigned int stringHash(const char *str)
+{
+	// Fast FNV-1a hash for better distribution
+	unsigned int hash = 2166136261u;
+	while (*str)
+	{
+		hash ^= (unsigned char)*str++;
+		hash *= 16777619u;
+	}
+	return hash % STRING_HASH_SIZE;
+}
+
+static char *pooledStrdup(const char *str)
+{
+	if (UNLIKELY(!str))
+		return NULL;
+
+	unsigned int hash = stringHash(str);
+
+	pthread_mutex_lock(&string_pool_mutex);
+
+	// Look for existing string
+	StringPoolEntry *entry = string_pool[hash];
+	while (entry)
+	{
+		if (LIKELY(strcmp(entry->str, str) == 0))
+		{
+			entry->ref_count++;
+			pthread_mutex_unlock(&string_pool_mutex);
+			return entry->str;
+		}
+		entry = entry->next;
+	}
+
+	// Create new entry
+	entry = malloc(sizeof(StringPoolEntry));
+	entry->str = strdup(str);
+	entry->ref_count = 1;
+	entry->next = string_pool[hash];
+	string_pool[hash] = entry;
+
+	pthread_mutex_unlock(&string_pool_mutex);
+	return entry->str;
+}
+
+static void pooledStrfree(char *str)
+{
+	if (UNLIKELY(!str))
+		return;
+
+	unsigned int hash = stringHash(str);
+
+	pthread_mutex_lock(&string_pool_mutex);
+
+	StringPoolEntry *entry = string_pool[hash];
+	StringPoolEntry *prev = NULL;
+
+	while (entry)
+	{
+		if (LIKELY(entry->str == str))
+		{
+			entry->ref_count--;
+			if (UNLIKELY(entry->ref_count <= 0))
+			{
+				if (prev)
+				{
+					prev->next = entry->next;
+				}
+				else
+				{
+					string_pool[hash] = entry->next;
+				}
+				free(entry->str);
+				free(entry);
+			}
+			pthread_mutex_unlock(&string_pool_mutex);
+			return;
+		}
+		prev = entry;
+		entry = entry->next;
+	}
+
+	pthread_mutex_unlock(&string_pool_mutex);
+}
+
+static void cleanupStringPool(void)
+{
+	pthread_mutex_lock(&string_pool_mutex);
+
+	for (int i = 0; i < STRING_HASH_SIZE; i++)
+	{
+		StringPoolEntry *entry = string_pool[i];
+		while (entry)
+		{
+			StringPoolEntry *next = entry->next;
+			free(entry->str);
+			free(entry);
+			entry = next;
+		}
+		string_pool[i] = NULL;
+	}
+
+	pthread_mutex_unlock(&string_pool_mutex);
+	pthread_mutex_destroy(&string_pool_mutex);
 }
 
 ///////////////////////////////////////
@@ -2134,6 +2390,9 @@ static int lastScreen = SCREEN_OFF;
 
 int main(int argc, char *argv[])
 {
+	// Initialize memory pools and string pool for optimization
+	initMemoryPools();
+
 	// LOG_info("time from launch to:\n");
 	// unsigned long main_begin = SDL_GetTicks();
 	// unsigned long first_draw = 0;
@@ -2277,6 +2536,7 @@ int main(int argc, char *argv[])
 				Recent_free(recentEntry);
 				saveRecents();
 				if (switcher_selected < 0)
+
 					switcher_selected = recents->count - 1; // wrap
 				dirty = 1;
 			}
@@ -2831,7 +3091,7 @@ int main(int argc, char *argv[])
 						int max_w = (int)(screen->w - (screen->w * CFG_getGameArtWidth()));
 						int max_h = (int)(screen->h * 0.6);
 						int new_w = max_w;
-						int new_h = max_h;
+						int new_h = (int)(new_w * aspect_ratio);
 						had_thumb = 1;
 						if (exists(thumbpath))
 							ox = (int)(max_w)-SCALE1(BUTTON_MARGIN * 5);
@@ -3069,7 +3329,7 @@ int main(int argc, char *argv[])
 			{
 				int img_w = thumbbmp->w;
 				int img_h = thumbbmp->h;
-				double aspect_ratio = (double)img_h / img_w;
+				double aspect_ratio = (double)img_h / (double)img_w;
 
 				int max_w = (int)(screen->w * CFG_getGameArtWidth());
 				int max_h = (int)(screen->h * 0.6);
@@ -3142,7 +3402,7 @@ int main(int argc, char *argv[])
 				GFX_clearLayers(4);
 				SDL_LockMutex(animMutex);
 				GFX_drawOnLayer(globalpill, pillRect.x, pillRect.y, globallpillW, globalpill->h, 1.0f, 0, 2);
-				GFX_drawOnLayer(globalText, SCALE1(BUTTON_MARGIN + BUTTON_PADDING), pilltargetTextY, globalText->w, globalText->h, 1.0f, 0, 4);
+				GFX_drawOnLayer(globalText, SCALE1(PADDING + BUTTON_PADDING), pilltargetTextY, globalText->w, globalText->h, 1.0f, 0, 4);
 				SDL_UnlockMutex(animMutex);
 				PLAT_GPU_Flip();
 			}
@@ -3210,4 +3470,8 @@ int main(int argc, char *argv[])
 	PAD_quit();
 	GFX_quit();
 	QuitSettings();
+
+	// Cleanup memory pools and string pool
+	cleanupStringPool();
+	cleanupMemoryPools();
 }

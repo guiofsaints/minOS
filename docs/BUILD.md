@@ -1,15 +1,15 @@
-# NextUI Build System Documentation
+# minOS Build System Documentation
 
 ## Overview
 
-NextUI uses a sophisticated build system based on Docker containerization and hierarchical makefiles to support cross-compilation for embedded ARM devices while maintaining a native development environment.
+minOS uses a sophisticated build system based on Docker containerization and hierarchical makefiles to support cross-compilation for embedded ARM devices while maintaining a native development environment.
 
 ## Build Architecture
 
 ### Build System Components
 
 ```
-NextUI Build System
+minOS Build System
 ├── makefile                    # Main orchestration makefile
 ├── makefile.native            # Native desktop builds
 ├── makefile.toolchain         # Docker cross-compilation
@@ -18,7 +18,7 @@ NextUI Build System
 │   └── tg5040-toolchain/      # TrimUI ARM64 toolchain
 ├── workspace/                 # Source code and builds
 │   ├── all/                   # Cross-platform components
-│   │   ├── nextui/           # Main UI (~2800 LOC)
+│   │   ├── minos/           # Main UI (~2800 LOC)
 │   │   ├── minarch/          # Emulation engine (~7100 LOC)
 │   │   ├── settings/         # Configuration system (C++)
 │   │   ├── common/           # Shared APIs and libraries
@@ -101,7 +101,7 @@ Initializes build environment:
 
 #### `make build PLATFORM={platform}`
 Compiles core system components:
-- **nextui.elf** - Main user interface (~2800 LOC)
+- **minos.elf** - Main user interface (~2800 LOC)
 - **minarch.elf** - Emulation engine (~7100 LOC)
 - **settings.elf** - Configuration system
 - **libmsettings.so** - Hardware settings library
@@ -141,9 +141,9 @@ make build-core PLATFORM=tg5040 CORE=gambatte
 
 #### `make package`
 Creates release packages:
-- **NextUI-YYYYMMDD-X-base.zip** - Minimal system
-- **NextUI-YYYYMMDD-X-extras.zip** - Additional emulators
-- **NextUI-YYYYMMDD-X-all.zip** - Complete package
+- **minOS-YYYYMMDD-X-base.zip** - Minimal system
+- **minOS-YYYYMMDD-X-extras.zip** - Additional emulators
+- **minOS-YYYYMMDD-X-all.zip** - Complete package
 
 ## Docker Toolchain System
 
@@ -174,10 +174,10 @@ ENV PKG_CONFIG_PATH=/usr/lib/aarch64-linux-gnu/pkgconfig
 
 ```bash
 # Build toolchain container
-docker build -t nextui-tg5040-toolchain ./toolchains/tg5040-toolchain/
+docker build -t minos-tg5040-toolchain ./toolchains/tg5040-toolchain/
 
 # Run build in container
-docker run --rm -v $(PWD):/workspace nextui-tg5040-toolchain \
+docker run --rm -v $(PWD):/workspace minos-tg5040-toolchain \
     make -C /workspace build PLATFORM=tg5040
 ```
 
@@ -350,7 +350,7 @@ make -j8 build PLATFORM=tg5040
 make incremental PLATFORM=tg5040
 
 # Force rebuild specific module
-make rebuild-nextui PLATFORM=tg5040
+make rebuild-minos PLATFORM=tg5040
 ```
 
 ## Troubleshooting
@@ -381,9 +381,9 @@ make asan-build PLATFORM=tg5040
 
 ```
 releases/
-├── NextUI-YYYYMMDD-X-base.zip    # Minimal system
-├── NextUI-YYYYMMDD-X-extras.zip  # Additional emulators
-└── NextUI-YYYYMMDD-X-all.zip     # Complete package
+├── minOS-YYYYMMDD-X-base.zip    # Minimal system
+├── minOS-YYYYMMDD-X-extras.zip  # Additional emulators
+└── minOS-YYYYMMDD-X-all.zip     # Complete package
 ```
 
 ## Debug Commands
@@ -543,8 +543,8 @@ EXTRAS/
 
 ### Versioning
 ```
-NextUI-YYYYMMDD[-branch]-increment
-Example: NextUI-20250628-main-1
+minOS-YYYYMMDD[-branch]-increment
+Example: minOS-20250628-main-1
 ```
 
 ### Release Types

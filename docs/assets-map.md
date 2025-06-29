@@ -1,8 +1,8 @@
-# NextUI Assets & Customization Map
+# minOS Assets & Customization Map
 
 ## Overview
 
-This document provides a comprehensive map of all branding, text, and image assets in the NextUI firmware project that can be safely modified for customization or rebranding to `minOS` or other names.
+This document provides a comprehensive map of all branding, text, and image assets in the minOS firmware project that can be safely modified for customization or rebranding.
 
 ---
 
@@ -12,20 +12,20 @@ Files containing project name references that should be updated:
 
 | File/Path | Current Reference | Suggested New Value | Notes |
 |-----------|-------------------|---------------------|-------|
-| `README.md` | NextUI | minOS | Main project documentation |
-| `docs/README.md` | NextUI | minOS | Documentation overview |
-| `docs/build-quick.md` | NextUI | minOS | Quick build guide |
-| `makefile` | NextUI | minOS | Main makefile header comment |
-| `workspace/all/nextui/nextui.c:2146` | `LOG_info("NextUI\n");` | `LOG_info("minOS\n");` | Boot log message |
-| `workspace/all/minarch/minarch.c:6542` | `"NextUI (" BUILD_DATE " " BUILD_HASH ")"` | `"minOS (" BUILD_DATE " " BUILD_HASH ")"` | Frontend version string |
-| `workspace/all/settings/settings.cpp:318` | `"NextUI version"` | `"minOS version"` | Settings menu label |
-| `workspace/tg5040/platform/platform.c:2554` | `/tmp/nextui_exec` | `/tmp/minos_exec` | Temporary execution file |
-| `workspace/tg5040/other/NextCommander/Makefile:16` | `NEXTUI_SYSTEM_PATH` | `MINOS_SYSTEM_PATH` | Build variable |
-| `workspace/all/common/config.h:91` | `NextUISettings` | `minOSSettings` | Settings structure name |
-| `workspace/all/common/config.c:5,21,26` | `NextUISettings` | `minOSSettings` | Settings implementation |
-| `skeleton/BASE/README.txt` | NextUI | minOS | Installation instructions |
-| `skeleton/EXTRAS/README.txt` | NextUI | minOS | Extras documentation |
-| `todo.txt` | NextUI references | minOS | Development notes |
+| `README.md` | minOS | minOS | Main project documentation |
+| `docs/README.md` | minOS | minOS | Documentation overview |
+| `docs/build-quick.md` | minOS | minOS | Quick build guide |
+| `makefile` | minOS | minOS | Main makefile header comment |
+| `workspace/all/minos/minos.c:2146` | `LOG_info("minOS\n");` | `LOG_info("minOS\n");` | Boot log message |
+| `workspace/all/minarch/minarch.c:6542` | `"minOS (" BUILD_DATE " " BUILD_HASH ")"` | `"minOS (" BUILD_DATE " " BUILD_HASH ")"` | Frontend version string |
+| `workspace/all/settings/settings.cpp:318` | `"minOS version"` | `"minOS version"` | Settings menu label |
+| `workspace/tg5040/platform/platform.c:2554` | `/tmp/minos_exec` | `/tmp/minos_exec` | Temporary execution file |
+| `workspace/tg5040/other/NextCommander/Makefile:16` | `MINOS_SYSTEM_PATH` | `MINOS_SYSTEM_PATH` | Build variable |
+| `workspace/all/common/config.h:91` | `minOSSettings` | `minOSSettings` | Settings structure name |
+| `workspace/all/common/config.c:5,21,26` | `minOSSettings` | `minOSSettings` | Settings implementation |
+| `skeleton/BASE/README.txt` | minOS | minOS | Installation instructions |
+| `skeleton/EXTRAS/README.txt` | minOS | minOS | Extras documentation |
+| `todo.txt` | minOS references | minOS | Development notes |
 
 ---
 
@@ -41,9 +41,9 @@ Visual assets that can be replaced for branding:
 | `skeleton/SYSTEM/res/assets@4x.png` | UI icons 4x resolution | ✅ | Maximum resolution icons |
 | `skeleton/SYSTEM/res/background.png` | Default background | ✅ | Main menu background |
 | `skeleton/SYSTEM/res/charging-640-480.png` | Charging screen | ✅ | Battery charging indicator |
-| `skeleton/EXTRAS/Tools/tg5040/Bootlogo.pak/smartpro/bootlogo_minui_next.bmp` | NextUI boot logo (Smart Pro) | ✅ | NextUI-branded boot screen |
+| `skeleton/EXTRAS/Tools/tg5040/Bootlogo.pak/smartpro/bootlogo_minos.bmp` | minOS boot logo (Smart Pro) | ✅ | minOS-branded boot screen |
 | `skeleton/EXTRAS/Tools/tg5040/Bootlogo.pak/smartpro/bootlogo_minui.bmp` | MinUI boot logo (Smart Pro) | ✅ | Legacy MinUI boot screen |
-| `skeleton/EXTRAS/Tools/tg5040/Bootlogo.pak/brick/bootlogo_minui_next.bmp` | NextUI boot logo (Brick) | ✅ | NextUI-branded boot screen |
+| `skeleton/EXTRAS/Tools/tg5040/Bootlogo.pak/brick/bootlogo_minos.bmp` | minOS boot logo (Brick) | ✅ | minOS-branded boot screen |
 | `skeleton/EXTRAS/Tools/tg5040/Bootlogo.pak/brick/bootlogo_minui.bmp` | MinUI boot logo (Brick) | ✅ | Legacy MinUI boot screen |
 | `workspace/tg5040/install/installing.png` | Installation screen | ✅ | Shows during firmware install |
 | `workspace/tg5040/install/updating.png` | Update screen | ✅ | Shows during firmware update |
@@ -58,7 +58,7 @@ User-facing strings and text for branding customization:
 | Location/File | Example String | Editable? | Notes |
 |---------------|----------------|-----------|-------|
 | `workspace/all/minarch/minarch.c:6542` | Frontend version display | ✅ | Shows in emulator menu |
-| `workspace/all/settings/settings.cpp:318` | "NextUI version" | ✅ | Settings menu item |
+| `workspace/all/settings/settings.cpp:318` | "minOS version" | ✅ | Settings menu item |
 | `workspace/all/settings/settings.cpp:251,253,257,259` | Save format references to MinUI | ✅ | Configuration options |
 | `skeleton/BASE/README.txt` | Installation instructions | ✅ | User documentation |
 | `skeleton/EXTRAS/README.txt` | Extras documentation | ✅ | User documentation |
@@ -88,13 +88,13 @@ Additional customizable elements:
 
 | Element | Description | Editable? | Notes |
 |---------|-------------|-----------|-------|
-| **Package Names** | `MinUI.zip`, `NextUI.zip` | ✅ | Installation package naming |
+| **Package Names** | `MinUI.zip`, `minOS.zip` | ✅ | Installation package naming |
 | **PAK System** | `MinUI.pak` folder structure | ✅ | Core system PAK naming |
 | **Directory Paths** | `.minui` hidden directories | ✅ | User data storage paths |
 | **Build Variables** | `BUILD_HASH`, `BUILD_DATE` in version strings | ✅ | Version identification |
 | **Log Messages** | Boot and debug log entries | ✅ | System logging output |
-| **Settings Structure** | `NextUISettings` struct and variables | ✅ | Internal configuration naming |
-| **Temporary Files** | `/tmp/nextui_exec` execution marker | ✅ | Runtime file naming |
+| **Settings Structure** | `minOSSettings` struct and variables | ✅ | Internal configuration naming |
+| **Temporary Files** | `/tmp/minos_exec` execution marker | ✅ | Runtime file naming |
 | **Source URLs** | GitHub references in documentation | ✅ | Repository and source links |
 
 ---
@@ -105,11 +105,11 @@ Core directory and file naming conventions:
 
 | Current Path/Name | New Path/Name | Editable? | Notes |
 |-------------------|---------------|-----------|-------|
-| `workspace/all/nextui/` | `workspace/all/minos/` | ✅ | Main UI module directory |
+| `workspace/all/minos/` | `workspace/all/minos/` | ✅ | Main UI module directory |
 | `MinUI.pak` | `minOS.pak` | ✅ | Core system PAK |
 | `MinUI.zip` | `minOS.zip` | ✅ | Installation package |
 | `.minui` directories | `.minos` directories | ✅ | User data storage |
-| `nextui.elf` executable | `minos.elf` executable | ✅ | Main UI binary |
+| `minos.elf` executable | `minos.elf` executable | ✅ | Main UI binary |
 
 ---
 
@@ -134,10 +134,10 @@ Build system elements for customization:
 
 | Element | Current Value | Customizable? | Notes |
 |---------|---------------|---------------|-------|
-| Project root directory name | `NextUI/` | ✅ | Can be renamed |
-| Makefile project header | `# NextUI` | ✅ | Build system branding |
+| Project root directory name | `minOS/` | ✅ | Can be renamed |
+| Makefile project header | `# minOS` | ✅ | Build system branding |
 | Build hash generation | Git-based versioning | ✅ | Version string customization |
-| Docker container naming | `nextui-*-toolchain` | ✅ | Build environment naming |
+| Docker container naming | `minos-*-toolchain` | ✅ | Build environment naming |
 
 ---
 
@@ -149,7 +149,7 @@ Build system elements for customization:
 |------|-------|--------|
 | `.minui/` | Save states, screenshots, configuration | High - affects save compatibility |
 | `MinUI.pak/` | Core system launcher | High - affects boot process |
-| `/tmp/nextui_exec` | Runtime execution marker | Medium - affects platform code |
+| `/tmp/minos_exec` | Runtime execution marker | Medium - affects platform code |
 
 ---
 

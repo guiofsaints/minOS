@@ -1,14 +1,14 @@
-# GitHub Copilot Instructions - NextUI Project
+# GitHub Copilot Instructions - minOS Project
 
 ## 🎯 Project Overview
 
-NextUI is a high-performance custom firmware for portable retro gaming devices, primarily targeting the **TrimUI family** (Brick/Smart Pro). Built on MinUI foundation with a completely rebuilt emulation engine, NextUI delivers modern user experience with low-level optimizations.
+minOS is a high-performance custom firmware for portable retro gaming devices, primarily targeting the **TrimUI family** (Brick/Smart Pro). Built on MinUI foundation with a completely rebuilt emulation engine, minOS delivers modern user experience with low-level optimizations.
 
 This is a fork/evolution of the MinUI project, enhanced with advanced features for better performance and user experience.
 
 ### Repository Information
 
-- **Project**: minOS (NextUI)
+- **Project**: minOS
 - **Repository**: https://github.com/guiofsaints/minOS
 - **Primary Platform**: tg5040 (TrimUI Smart Pro/Brick)
 - **Development Platform**: desktop (testing only)
@@ -29,7 +29,7 @@ This is a fork/evolution of the MinUI project, enhanced with advanced features f
 ```
 workspace/
 ├── all/                    # Cross-platform components
-│   ├── nextui/            # UI layer (~2800 LOC)
+│   ├── minos/            # UI layer (~2800 LOC)
 │   ├── minarch/           # Emulation engine (~7100 LOC)
 │   ├── settings/          # Configuration system (C++)
 │   ├── common/            # Shared library & APIs
@@ -357,7 +357,7 @@ make special         # Special processing
 make package         # Create ZIP packages
 make done           # Finalization
 
-# Output: releases/NextUI-YYYYMMDD-X-{base,extras,all}.zip
+# Output: releases/minOS-YYYYMMDD-X-{base,extras,all}.zip
 ```
 
 ## 🚫 What NOT to Do
@@ -429,7 +429,7 @@ int test_config_system(void) {
 
 ### Important Sources
 
-- `workspace/all/nextui/nextui.c` - Main UI (~2800 LOC)
+- `workspace/all/minos/minos.c` - Main UI (~2800 LOC)
 - `workspace/all/minarch/minarch.c` - Emulation engine (~7100 LOC)
 - `workspace/all/settings/settings.cpp` - Settings UI
 - `workspace/{platform}/platform/platform.c` - Hardware abstraction
@@ -526,4 +526,4 @@ int test_config_system(void) {
 
 ---
 
-_This file should be used as a reference for GitHub Copilot to understand NextUI project structure, coding standards, and best practices. Update as the project evolves._
+_This file should be used as a reference for GitHub Copilot to understand minOS project structure, coding standards, and best practices. Update as the project evolves._

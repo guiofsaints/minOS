@@ -1,15 +1,15 @@
-# NextUI Hardware Abstraction Layer
+# minOS Hardware Abstraction Layer
 
 ## Overview
 
-NextUI implements a comprehensive Hardware Abstraction Layer (HAL) that provides a uniform interface for accessing device-specific features across different platforms. The HAL isolates platform-specific code and enables NextUI to run on multiple hardware configurations while maintaining consistent functionality.
+minOS implements a comprehensive Hardware Abstraction Layer (HAL) that provides a uniform interface for accessing device-specific features across different platforms. The HAL isolates platform-specific code and enables minOS to run on multiple hardware configurations while maintaining consistent functionality.
 
 ## HAL Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                     Application Layer                      │
-│              (NextUI, MinArch, Settings)                   │
+│              (minOS, MinArch, Settings)                   │
 ├─────────────────────────────────────────────────────────────┤
 │                    Common API Layer                        │
 │           (api.h, Graphics, Audio, Input APIs)             │
@@ -229,7 +229,7 @@ SDL_Surface* PLAT_initVideo(void) {
     SDL_ShowCursor(0);
     
     // Create window and OpenGL context
-    vid.window = SDL_CreateWindow("NextUI", 
+    vid.window = SDL_CreateWindow("minOS", 
         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
         is_brick ? 1024 : 1280, is_brick ? 768 : 720,
         SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN);
@@ -277,7 +277,7 @@ SDL_Surface* PLAT_initVideo(void) {
     SDL_ShowCursor(0);
     
     // Create window
-    vid.window = SDL_CreateWindow("NextUI Development",
+    vid.window = SDL_CreateWindow("minOS Development",
         SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
         FIXED_WIDTH, FIXED_HEIGHT,
         SDL_WINDOW_OPENGL);
@@ -457,7 +457,7 @@ void PLAT_powerOff(void) {
     }
     
     // Clean shutdown sequence
-    system("rm -f /tmp/nextui_exec && sync");
+    system("rm -f /tmp/minos_exec && sync");
     sleep(2);
     
     // Mute audio and turn off display
@@ -773,4 +773,4 @@ FALLBACK_IMPLEMENTATION int PLAT_supportsDeepSleep(void) {
 }
 ```
 
-This comprehensive HAL design allows NextUI to maintain consistent functionality across different hardware platforms while efficiently utilizing platform-specific features where available.
+This comprehensive HAL design allows minOS to maintain consistent functionality across different hardware platforms while efficiently utilizing platform-specific features where available.

@@ -1,8 +1,8 @@
-# NextUI Memory Map
+# minOS Memory Map
 
 ## Overview
 
-NextUI firmware operates in a multi-process Linux environment with virtual memory management. This document describes the memory layout, allocation strategies, and reserved regions used by the firmware components.
+minOS firmware operates in a multi-process Linux environment with virtual memory management. This document describes the memory layout, allocation strategies, and reserved regions used by the firmware components.
 
 ## Virtual Memory Layout
 
@@ -39,11 +39,11 @@ Virtual Address Space (per process)
 
 ## Firmware Component Memory Usage
 
-### NextUI Main Process
+### minOS Main Process
 
 | Component | Base Address | Size | Description |
 |-----------|--------------|------|-------------|
-| **Code Segment** | 0x08000000 | ~8MB | NextUI executable code |
+| **Code Segment** | 0x08000000 | ~8MB | minOS executable code |
 | **Data Segment** | 0x08800000 | ~2MB | Global variables and constants |
 | **Heap** | 0x40000000+ | Dynamic | Runtime allocations |
 | **SDL Surfaces** | Heap | ~50MB | Display buffers and textures |

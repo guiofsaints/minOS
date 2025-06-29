@@ -1,4 +1,4 @@
-# NextUI - Quick Build Guide
+# minOS - Quick Build Guide
 
 ## 🚀 Quick Build (TL;DR)
 
@@ -48,9 +48,9 @@ make special && make package && make done
 
 ```
 releases/
-├── NextUI-YYYYMMDD-X-base.zip    # Minimal system
-├── NextUI-YYYYMMDD-X-extras.zip  # Extra emulators
-└── NextUI-YYYYMMDD-X-all.zip     # Complete package
+├── minOS-YYYYMMDD-X-base.zip    # Minimal system
+├── minOS-YYYYMMDD-X-extras.zip  # Extra emulators
+└── minOS-YYYYMMDD-X-all.zip     # Complete package
 ```
 
 ## 🐛 Debug

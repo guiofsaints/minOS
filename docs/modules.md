@@ -2,8 +2,8 @@
 
 ## Core Modules
 
-### NextUI (Main UI Module)
-**Location**: `workspace/all/nextui/`  
+### minOS (Main UI Module)
+**Location**: `workspace/all/minos/`  
 **Language**: C  
 **LOC**: ~2800  
 **Purpose**: Primary user interface and menu system
@@ -17,8 +17,8 @@
 - Game switcher functionality
 
 #### Key Files
-- `nextui.c` - Main UI logic and event loop
-- `nextui.h` - UI structures and definitions
+- `minos.c` - Main UI logic and event loop
+- `minos.h` - UI structures and definitions
 
 #### Threading
 - Runs on main UI thread
@@ -335,7 +335,7 @@ endif
 ## Module Dependencies
 
 ```
-NextUI
+minOS
 ├── depends on: Common API, Platform Layer
 ├── communicates with: Settings, GameTime
 └── coordinates: Background workers
@@ -347,7 +347,7 @@ MinArch
 
 Settings
 ├── depends on: Common API, Platform Layer
-├── communicates with: NextUI, MinArch
+├── communicates with: minOS, MinArch
 └── modifies: System configuration
 
 Platform Layer
