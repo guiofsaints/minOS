@@ -511,7 +511,7 @@ BASE/
 ├── Shaders/       # Video shaders
 ├── trimui/        # TrimUI specific installer
 ├── em_ui.sh       # Initialization script
-├── MinUI.zip      # Main payload
+├── minOS.zip      # Main payload
 └── README.txt     # Instructions
 ```
 

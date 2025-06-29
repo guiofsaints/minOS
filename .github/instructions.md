@@ -2,7 +2,7 @@
 
 ## 🎯 Project Overview
 
-minOS is a high-performance Custom Firmware (CFW) based on MinUI with a completely rebuilt emulation engine for portable retro gaming devices. It primarily targets the **TrimUI family** (Brick/Smart Pro) offering modern user experience with low-level optimizations.
+minOS is a high-performance Custom Firmware (CFW) with a completely rebuilt emulation engine for portable retro gaming devices. It primarily targets the **TrimUI family** (Brick/Smart Pro) offering modern user experience with low-level optimizations.
 
 ### Key Technologies
 - **Languages**: C (90%), C++ (8%), Shell (2%)

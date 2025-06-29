@@ -172,7 +172,7 @@ Before minOS starts, the system performs final preparation:
 
 ```bash
 #!/bin/sh
-# MinUI.pak/launch.sh
+# minOS.pak/launch.sh
 
 export PLATFORM="tg5040"
 export SDCARD_PATH="/mnt/SDCARD"
@@ -181,7 +181,7 @@ export USERDATA_PATH="$SDCARD_PATH/.userdata/$PLATFORM"
 
 # Create required directories
 mkdir -p "$USERDATA_PATH/logs"
-mkdir -p "$USERDATA_PATH/.minui"
+mkdir -p "$USERDATA_PATH/.minos"
 
 # Setup library paths
 export LD_LIBRARY_PATH="$SYSTEM_PATH/lib:/usr/trimui/lib:$LD_LIBRARY_PATH"

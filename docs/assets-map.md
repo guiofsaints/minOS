@@ -42,9 +42,9 @@ Visual assets that can be replaced for branding:
 | `skeleton/SYSTEM/res/background.png` | Default background | ✅ | Main menu background |
 | `skeleton/SYSTEM/res/charging-640-480.png` | Charging screen | ✅ | Battery charging indicator |
 | `skeleton/EXTRAS/Tools/tg5040/Bootlogo.pak/smartpro/bootlogo_minos.bmp` | minOS boot logo (Smart Pro) | ✅ | minOS-branded boot screen |
-| `skeleton/EXTRAS/Tools/tg5040/Bootlogo.pak/smartpro/bootlogo_minui.bmp` | MinUI boot logo (Smart Pro) | ✅ | Legacy MinUI boot screen |
+| `skeleton/EXTRAS/Tools/tg5040/Bootlogo.pak/smartpro/bootlogo_legacy.bmp` | Legacy boot logo (Smart Pro) | ✅ | Legacy boot screen |
 | `skeleton/EXTRAS/Tools/tg5040/Bootlogo.pak/brick/bootlogo_minos.bmp` | minOS boot logo (Brick) | ✅ | minOS-branded boot screen |
-| `skeleton/EXTRAS/Tools/tg5040/Bootlogo.pak/brick/bootlogo_minui.bmp` | MinUI boot logo (Brick) | ✅ | Legacy MinUI boot screen |
+| `skeleton/EXTRAS/Tools/tg5040/Bootlogo.pak/brick/bootlogo_legacy.bmp` | Legacy boot logo (Brick) | ✅ | Legacy boot screen |
 | `workspace/tg5040/install/installing.png` | Installation screen | ✅ | Shows during firmware install |
 | `workspace/tg5040/install/updating.png` | Update screen | ✅ | Shows during firmware update |
 | `docs/minos-archtecture.png` | Architecture diagram | ✅ | Technical documentation image |
@@ -59,7 +59,7 @@ User-facing strings and text for branding customization:
 |---------------|----------------|-----------|-------|
 | `workspace/all/minarch/minarch.c:6542` | Frontend version display | ✅ | Shows in emulator menu |
 | `workspace/all/settings/settings.cpp:318` | "minOS version" | ✅ | Settings menu item |
-| `workspace/all/settings/settings.cpp:251,253,257,259` | Save format references to MinUI | ✅ | Configuration options |
+| `workspace/all/settings/settings.cpp:251,253,257,259` | Save format references | ✅ | Configuration options |
 | `skeleton/BASE/README.txt` | Installation instructions | ✅ | User documentation |
 | `skeleton/EXTRAS/README.txt` | Extras documentation | ✅ | User documentation |
 | `workspace/tg5040/libmsettings/msettings.c` | Settings format comments | ✅ | Code comments (internal) |
@@ -88,9 +88,9 @@ Additional customizable elements:
 
 | Element | Description | Editable? | Notes |
 |---------|-------------|-----------|-------|
-| **Package Names** | `MinUI.zip`, `minOS.zip` | ✅ | Installation package naming |
-| **PAK System** | `MinUI.pak` folder structure | ✅ | Core system PAK naming |
-| **Directory Paths** | `.minui` hidden directories | ✅ | User data storage paths |
+| **Package Names** | `Legacy.zip`, `minOS.zip` | ✅ | Installation package naming |
+| **PAK System** | `minOS.pak` folder structure | ✅ | Core system PAK naming |
+| **Directory Paths** | `.minos` hidden directories | ✅ | User data storage paths |
 | **Build Variables** | `BUILD_HASH`, `BUILD_DATE` in version strings | ✅ | Version identification |
 | **Log Messages** | Boot and debug log entries | ✅ | System logging output |
 | **Settings Structure** | `minOSSettings` struct and variables | ✅ | Internal configuration naming |
@@ -106,9 +106,9 @@ Core directory and file naming conventions:
 | Current Path/Name | New Path/Name | Editable? | Notes |
 |-------------------|---------------|-----------|-------|
 | `workspace/all/minos/` | `workspace/all/minos/` | ✅ | Main UI module directory |
-| `MinUI.pak` | `minOS.pak` | ✅ | Core system PAK |
-| `MinUI.zip` | `minOS.zip` | ✅ | Installation package |
-| `.minui` directories | `.minos` directories | ✅ | User data storage |
+| `minOS.pak` | `minOS.pak` | ✅ | Core system PAK |
+| `Legacy.zip` | `minOS.zip` | ✅ | Installation package |
+| `.minos` directories | `.minos` directories | ✅ | User data storage |
 | `minos.elf` executable | `minos.elf` executable | ✅ | Main UI binary |
 
 ---
@@ -147,16 +147,16 @@ Build system elements for customization:
 
 | Path | Usage | Impact |
 |------|-------|--------|
-| `.minui/` | Save states, screenshots, configuration | High - affects save compatibility |
-| `MinUI.pak/` | Core system launcher | High - affects boot process |
+| `.minos/` | Save states, screenshots, configuration | High - affects save compatibility |
+| `minOS.pak/` | Core system launcher | High - affects boot process |
 | `/tmp/minos_exec` | Runtime execution marker | Medium - affects platform code |
 
 ---
 
 ## 🚨 **Safety Notes**
 
-1. **Save Compatibility**: Changing `.minui` directory paths will break existing save states and user data
-2. **PAK System**: Renaming `MinUI.pak` requires updating all installation and boot scripts
+1. **Save Compatibility**: Changing `.minos` directory paths will break existing save states and user data
+2. **PAK System**: Renaming `minOS.pak` requires updating all installation and boot scripts
 3. **Binary Names**: Changing executable names requires makefile and installation script updates
 4. **Version Strings**: Update build system to maintain proper versioning
 5. **Documentation**: Ensure all user-facing documentation reflects the new branding

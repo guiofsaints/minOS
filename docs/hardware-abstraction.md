@@ -84,7 +84,7 @@ Each platform defines hardware-specific constants:
 #define FIXED_HEIGHT    768
 #define SCREEN_FPS      60.0
 #define MAX_LIGHTS      0
-#define SDCARD_PATH     "/Library/Developer/Projects/private/MinUI_FAKESD"
+#define SDCARD_PATH     "/Library/Developer/Projects/private/minOS_FAKESD"
 ```
 
 ## Input Abstraction

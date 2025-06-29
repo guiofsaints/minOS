@@ -2,9 +2,9 @@
 
 ## 🎯 Project Overview
 
-minOS is a high-performance custom firmware for portable retro gaming devices, primarily targeting the **TrimUI family** (Brick/Smart Pro). Built on MinUI foundation with a completely rebuilt emulation engine, minOS delivers modern user experience with low-level optimizations.
+minOS is a high-performance custom firmware for portable retro gaming devices, primarily targeting the **TrimUI family** (Brick/Smart Pro). Built on a solid foundation with a completely rebuilt emulation engine, minOS delivers modern user experience with low-level optimizations.
 
-This is a fork/evolution of the MinUI project, enhanced with advanced features for better performance and user experience.
+This is an evolution of retro gaming firmware, enhanced with advanced features for better performance and user experience.
 
 ### Repository Information
 
