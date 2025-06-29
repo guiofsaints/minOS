@@ -5,11 +5,11 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-int prefixMatch(char* pre, const char* str);
-int suffixMatch(char* suf,const char* str);
-int exactMatch(char* str1, char* str2);
-int containsString(char* haystack, char* needle);
-int hide(char* file_name);
+int prefixMatch(const char *pre, const char *str);
+int suffixMatch(const char *suf, const char *str);
+int exactMatch(const char *str1, const char *str2);
+int containsString(const char *haystack, const char *needle);
+int hide(const char *file_name);
 
 char *splitString(char *str, const char *delim);
 char *replaceString2(const char *orig, char *rep, char *with);
@@ -25,21 +25,21 @@ void folderPath(const char *filePath, char *folder_path);
 void cleanName(char *name_out, const char *file_name);
 bool pathRelativeTo(char *path_out, const char *dir_from, const char *file_to);
 
-void getDisplayName(const char* in_name, char* out_name);
-void getEmuName(const char* in_name, char* out_name);
-void getEmuPath(char* emu_name, char* pak_path);
+void getDisplayName(const char *in_name, char *out_name);
+void getEmuName(const char *in_name, char *out_name);
+void getEmuPath(char *emu_name, char *pak_path);
 
-void normalizeNewline(char* line);
-void trimTrailingNewlines(char* line);
-void trimSortingMeta(char** str);
+void normalizeNewline(char *line);
+void trimTrailingNewlines(char *line);
+void trimSortingMeta(char **str);
 
-int exists(char* path);
-void touch(char* path);
-void putFile(char* path, char* contents);
-char* allocFile(char* path); // caller must free
-void getFile(char* path, char* buffer, size_t buffer_size);
-void putInt(char* path, int value);
-int getInt(char* path);
+int exists(const char *path);
+void touch(const char *path);
+void putFile(const char *path, const char *contents);
+char *allocFile(const char *path); // caller must free
+void getFile(const char *path, char *buffer, size_t buffer_size);
+void putInt(const char *path, int value);
+int getInt(const char *path);
 
 uint64_t getMicroseconds(void);
 

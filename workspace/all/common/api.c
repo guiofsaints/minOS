@@ -1624,7 +1624,7 @@ int GFX_blitBattery(SDL_Surface *dst, SDL_Rect *dst_rect)
 		}
 	}
 }
-int GFX_getButtonWidth(char *hint, char *button)
+int GFX_getButtonWidth(const char *hint, const char *button)
 {
 	int button_width = 0;
 	int width;
@@ -1647,7 +1647,7 @@ int GFX_getButtonWidth(char *hint, char *button)
 	button_width += width + SCALE1(BUTTON_MARGIN);
 	return button_width;
 }
-void GFX_blitButton(char *hint, char *button, SDL_Surface *dst, SDL_Rect *dst_rect)
+void GFX_blitButton(const char *hint, const char *button, SDL_Surface *dst, SDL_Rect *dst_rect)
 {
 	SDL_Surface *text;
 	int ox = 0;
@@ -1686,7 +1686,7 @@ void GFX_blitButton(char *hint, char *button, SDL_Surface *dst, SDL_Rect *dst_re
 	SDL_BlitSurface(text, NULL, dst, &(SDL_Rect){ox + dst_rect->x, dst_rect->y + (SCALE1(BUTTON_SIZE) - text->h) / 2, text->w, text->h});
 	SDL_FreeSurface(text);
 }
-void GFX_blitMessage(TTF_Font *font, char *msg, SDL_Surface *dst, SDL_Rect *dst_rect)
+void GFX_blitMessage(TTF_Font *font, const char *msg, SDL_Surface *dst, SDL_Rect *dst_rect)
 {
 	if (!dst_rect)
 		dst_rect = &(SDL_Rect){0, 0, dst->w, dst->h};
@@ -1696,10 +1696,10 @@ void GFX_blitMessage(TTF_Font *font, char *msg, SDL_Surface *dst, SDL_Rect *dst_
 	SDL_Surface *text;
 #define TEXT_BOX_MAX_ROWS 16
 #define LINE_HEIGHT 24
-	char *rows[TEXT_BOX_MAX_ROWS];
+	const char *rows[TEXT_BOX_MAX_ROWS];
 	int row_count = 0;
 
-	char *tmp;
+	const char *tmp;
 	rows[row_count++] = msg;
 	while ((tmp = strchr(rows[row_count - 1], '\n')) != NULL)
 	{

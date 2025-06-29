@@ -21,13 +21,12 @@ OPTM=-Ofast
 build: 
 	$(CC) -c -Werror -fpic "$(TARGET).c" $(CFLAGS) -Wl,--no-as-needed $(LDFLAGS)
 	$(CC) -shared -o "lib$(TARGET).so" "$(TARGET).o" $(LDFLAGS)
-	mkdir -p "$(PREFIX_LOCAL)/include"
-	mkdir -p "$(PREFIX_LOCAL)/lib"
-	cp "$(TARGET).h" "$(PREFIX_LOCAL)/include"
-	cp "lib$(TARGET).so" "$(PREFIX_LOCAL)/lib"
+	mkdir -p "build/$(PLATFORM)/include"
+	mkdir -p "build/$(PLATFORM)/lib"
+	cp "$(TARGET).h" "build/$(PLATFORM)/include"
+	cp "lib$(TARGET).so" "build/$(PLATFORM)/lib"
 
 clean:
 	rm -f *.o
 	rm -f "lib$(TARGET).so"
-	rm -f $(PREFIX_LOCAL)/include/$(TARGET).h
-	rm -f $(PREFIX_LOCAL)/lib/lib$(TARGET).so
+	rm -rf build/

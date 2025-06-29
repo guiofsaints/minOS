@@ -15,6 +15,72 @@
 #include <pthread.h>
 
 ///////////////////////////////////////
+// Compiler Optimizations
+///////////////////////////////////////
+
+#ifdef __GNUC__
+#define LIKELY(x) __builtin_expect(!!(x), 1)
+#define UNLIKELY(x) __builtin_expect(!!(x), 0)
+#else
+#define LIKELY(x) (x)
+#define UNLIKELY(x) (x)
+#endif
+
+///////////////////////////////////////
+// Forward Declarations
+///////////////////////////////////////
+
+// String pool system
+static char *pooledStrdup(const char *str);
+void pooledStrfree(char *str);
+
+///////////////////////////////////////
+// Structure Definitions
+///////////////////////////////////////
+
+typedef struct Array
+{
+	int count;
+	int capacity;
+	void **items;
+} Array;
+
+enum EntryType
+{
+	ENTRY_DIR,
+	ENTRY_PAK,
+	ENTRY_ROM,
+};
+
+typedef struct Entry
+{
+	char *path;
+	char *name;
+	char *unique;
+	int type;
+	int alpha; // index in parent Directory's alphas Array, which points to the index of an Entry in its entries Array :sweat_smile:
+} Entry;
+
+#define INT_ARRAY_MAX 27
+typedef struct IntArray
+{
+	int count;
+	int items[INT_ARRAY_MAX];
+} IntArray;
+
+typedef struct Directory
+{
+	char *path;
+	char *name;
+	Array *entries;
+	IntArray *alphas;
+	// rendering
+	int selected;
+	int start;
+	int end;
+} Directory;
+
+///////////////////////////////////////
 // Memory Pool System for Performance Optimization
 ///////////////////////////////////////
 
@@ -106,13 +172,8 @@ static void cleanupMemoryPools(void)
 }
 
 ///////////////////////////////////////
-
-typedef struct Array
-{
-	int count;
-	int capacity;
-	void **items;
-} Array;
+// Array Implementation
+///////////////////////////////////////
 
 static Array *Array_new(void)
 {
@@ -239,21 +300,8 @@ static char *Hash_get(Hash *self, char *key)
 }
 
 ///////////////////////////////////////
-
-enum EntryType
-{
-	ENTRY_DIR,
-	ENTRY_PAK,
-	ENTRY_ROM,
-};
-typedef struct Entry
-{
-	char *path;
-	char *name;
-	char *unique;
-	int type;
-	int alpha; // index in parent Directory's alphas Array, which points to the index of an Entry in its entries Array :sweat_smile:
-} Entry;
+// Entry Implementation
+///////////////////////////////////////
 
 static Entry *Entry_new(char *path, int type)
 {
@@ -335,13 +383,9 @@ static void EntryArray_free(Array *self)
 }
 
 ///////////////////////////////////////
+// IntArray Implementation
+///////////////////////////////////////
 
-#define INT_ARRAY_MAX 27
-typedef struct IntArray
-{
-	int count;
-	int items[INT_ARRAY_MAX];
-} IntArray;
 static IntArray *IntArray_new(void)
 {
 	IntArray *self = malloc(sizeof(IntArray));
@@ -359,18 +403,8 @@ static void IntArray_free(IntArray *self)
 }
 
 ///////////////////////////////////////
-
-typedef struct Directory
-{
-	char *path;
-	char *name;
-	Array *entries;
-	IntArray *alphas;
-	// rendering
-	int selected;
-	int start;
-	int end;
-} Directory;
+// Directory Implementation
+///////////////////////////////////////
 
 static int getIndexChar(char *str)
 {
@@ -1417,7 +1451,7 @@ static char *pooledStrdup(const char *str)
 	return entry->str;
 }
 
-static void pooledStrfree(char *str)
+void pooledStrfree(char *str)
 {
 	if (UNLIKELY(!str))
 		return;
@@ -3091,6 +3125,7 @@ int main(int argc, char *argv[])
 						int max_w = (int)(screen->w - (screen->w * CFG_getGameArtWidth()));
 						int max_h = (int)(screen->h * 0.6);
 						int new_w = max_w;
+						double aspect_ratio = 1.0; // Default aspect ratio, will be updated when thumb loads
 						int new_h = (int)(new_w * aspect_ratio);
 						had_thumb = 1;
 						if (exists(thumbpath))

@@ -12,25 +12,32 @@
 
 ///////////////////////////////////////
 
-int prefixMatch(char* pre, const char* str) {
-	return (strncasecmp(pre,str,strlen(pre))==0);
+int prefixMatch(const char *pre, const char *str)
+{
+    return (strncasecmp(pre, str, strlen(pre)) == 0);
 }
-int suffixMatch(char* suf, const char* str) {
-	int len = strlen(suf);
-	int offset = strlen(str)-len;
-	return (offset>=0 && strncasecmp(suf, str+offset, len)==0);
+int suffixMatch(const char *suf, const char *str)
+{
+    int len = strlen(suf);
+    int offset = strlen(str) - len;
+    return (offset >= 0 && strncasecmp(suf, str + offset, len) == 0);
 }
-int exactMatch(char* str1, char* str2) {
-	if (!str1 || !str2) return 0; // NULL isn't safe here
-	int len1 = strlen(str1);
-	if (len1!=strlen(str2)) return 0;
-	return (strncmp(str1,str2,len1)==0);
+int exactMatch(const char *str1, const char *str2)
+{
+    if (!str1 || !str2)
+        return 0; // NULL isn't safe here
+    int len1 = strlen(str1);
+    if (len1 != strlen(str2))
+        return 0;
+    return (strncmp(str1, str2, len1) == 0);
 }
-int containsString(char* haystack, char* needle) {
-	return strcasestr(haystack, needle) != NULL;
+int containsString(const char *haystack, const char *needle)
+{
+    return strcasestr(haystack, needle) != NULL;
 }
-int hide(char* file_name) {
-	return file_name[0]=='.' || suffixMatch(".disabled", file_name) || exactMatch("map.txt", file_name);
+int hide(const char *file_name)
+{
+    return file_name[0] == '.' || suffixMatch(".disabled", file_name) || exactMatch("map.txt", file_name);
 }
 char *splitString(char *str, const char *delim)
 {
@@ -40,42 +47,49 @@ char *splitString(char *str, const char *delim)
     *p = '\0';                // terminate string after head
     return p + strlen(delim); // return tail substring
 }
-void truncateString(char *string, size_t max_len) {
-	size_t len = strlen(string) + 1;
-	if (len <= max_len) return;
+void truncateString(char *string, size_t max_len)
+{
+    size_t len = strlen(string) + 1;
+    if (len <= max_len)
+        return;
 
-	strncpy(&string[max_len - 4], "...\0", 4);
+    strncpy(&string[max_len - 4], "...\0", 4);
 }
-void wrapString(char *string, size_t max_len, size_t max_lines) {
-	char *line = string;
+void wrapString(char *string, size_t max_len, size_t max_lines)
+{
+    char *line = string;
 
-	for (size_t i = 1; i < max_lines; i++) {
-		char *p = line;
-		char *prev;
-		do {
-			prev = p;
-			p = strchr(prev+1, ' ');
-		} while (p && p - line < (int)max_len);
+    for (size_t i = 1; i < max_lines; i++)
+    {
+        char *p = line;
+        char *prev;
+        do
+        {
+            prev = p;
+            p = strchr(prev + 1, ' ');
+        } while (p && p - line < (int)max_len);
 
-		if (!p && strlen(line) < max_len) break;
+        if (!p && strlen(line) < max_len)
+            break;
 
-		if (prev && prev != line) {
-			line = prev + 1;
-			*prev = '\n';
-		}
-	}
-	truncateString(line, max_len);
+        if (prev && prev != line)
+        {
+            line = prev + 1;
+            *prev = '\n';
+        }
+    }
+    truncateString(line, max_len);
 }
 // TODO: verify this yields the same result as the one in minui.c, remove one
 // This one does not modify the input, cause we arent savages
 char *replaceString2(const char *orig, char *rep, char *with)
 {
-    const char *ins;     // the next insert point
-    char *tmp;     // varies
-    int len_rep;   // length of rep (the string to remove)
-    int len_with;  // length of with (the string to replace rep with)
-    int len_front; // distance between rep and end of last rep
-    int count;     // number of replacements
+    const char *ins; // the next insert point
+    char *tmp;       // varies
+    int len_rep;     // length of rep (the string to remove)
+    int len_with;    // length of with (the string to replace rep with)
+    int len_front;   // distance between rep and end of last rep
+    int count;       // number of replacements
 
     // sanity checks and initialization
     if (!orig || !rep)
@@ -104,7 +118,8 @@ char *replaceString2(const char *orig, char *rep, char *with)
     //    tmp points to the end of the result string
     //    ins points to the next occurrence of rep in orig
     //    orig points to the remainder of orig after "end of rep"
-    while (count--) {
+    while (count--)
+    {
         ins = strstr(orig, rep);
         len_front = ins - orig;
         tmp = strncpy(tmp, orig, len_front) + len_front;
@@ -132,7 +147,8 @@ size_t trimString(char *out, size_t len, const char *str, bool first)
 
     end = str + 1;
 
-    if ((unsigned char)*str == '"') {
+    if ((unsigned char)*str == '"')
+    {
         is_string = true;
         str++;
         while (strchr("\r\n\"", (unsigned char)*end) == NULL)
@@ -149,7 +165,8 @@ size_t trimString(char *out, size_t len, const char *str, bool first)
     if (first)
         while (strchr("\r\n\t {},", (unsigned char)*end) == NULL)
             end++;
-    else {
+    else
+    {
         end = str + strlen(str) - 1;
         while (end > str && strchr("\r\n\t {},", (unsigned char)*end) != NULL)
             end--;
@@ -178,13 +195,16 @@ void removeParentheses(char *str_out, const char *str_in)
     bool inside = false;
     char end_char;
 
-    for (int i = 0; i < len && i < STR_MAX; i++) {
-        if (!inside && (str_in[i] == '(' || str_in[i] == '[')) {
+    for (int i = 0; i < len && i < STR_MAX; i++)
+    {
+        if (!inside && (str_in[i] == '(' || str_in[i] == '['))
+        {
             end_char = str_in[i] == '(' ? ')' : ']';
             inside = true;
             continue;
         }
-        else if (inside) {
+        else if (inside)
+        {
             if (str_in[i] == end_char)
                 inside = false;
             continue;
@@ -198,25 +218,31 @@ void removeParentheses(char *str_out, const char *str_in)
 }
 void serializeTime(char *dest_str, int nTime)
 {
-    if (nTime >= 60) {
+    if (nTime >= 60)
+    {
         int h = nTime / 3600;
         int m = (nTime - 3600 * h) / 60;
-        if (h > 0) {
+        if (h > 0)
+        {
             sprintf(dest_str, "%dh %dm", h, m);
         }
-        else {
+        else
+        {
             sprintf(dest_str, "%dm %ds", m, nTime - 60 * m);
         }
     }
-    else {
+    else
+    {
         sprintf(dest_str, "%ds", nTime);
     }
 }
 int countChar(const char *str, char ch)
 {
     int i, count = 0;
-    for (i = 0; i <= strlen(str); i++) {
-        if (str[i] == ch) {
+    for (i = 0; i <= strlen(str); i++)
+    {
+        if (str[i] == ch)
+        {
             count++;
         }
     }
@@ -240,16 +266,20 @@ const char *baseName(const char *filename)
     char *p = strrchr(filename, '/');
     return p ? p + 1 : (char *)filename;
 }
-void folderPath(const char *path, char *result) {
-    char pathCopy[256];  
+void folderPath(const char *path, char *result)
+{
+    char pathCopy[256];
     strcpy(pathCopy, path);
 
-    char *lastSlash = strrchr(pathCopy, '/');  // Find the last slash
-    if (lastSlash != NULL) {
-        *lastSlash = '\0';  // Cut off the filename
-        strcpy(result, pathCopy);  // Copy the remaining path
-    } else {
-        strcpy(result, "");  // No folder found
+    char *lastSlash = strrchr(pathCopy, '/'); // Find the last slash
+    if (lastSlash != NULL)
+    {
+        *lastSlash = '\0';        // Cut off the filename
+        strcpy(result, pathCopy); // Copy the remaining path
+    }
+    else
+    {
+        strcpy(result, ""); // No folder found
     }
 }
 void cleanName(char *name_out, const char *file_name)
@@ -257,19 +287,22 @@ void cleanName(char *name_out, const char *file_name)
     char *name_without_ext = removeExtension(file_name);
     char *no_underscores = replaceString2(name_without_ext, "_", " ");
     char *dot_ptr = strstr(no_underscores, ".");
-    if (dot_ptr != NULL) {
+    if (dot_ptr != NULL)
+    {
         char *s = no_underscores;
         while (isdigit(*s) && s < dot_ptr)
             s++;
         if (s != dot_ptr)
             dot_ptr = no_underscores;
-        else {
+        else
+        {
             dot_ptr++;
             if (dot_ptr[0] == ' ')
                 dot_ptr++;
         }
     }
-    else {
+    else
+    {
         dot_ptr = no_underscores;
     }
     removeParentheses(name_out, dot_ptr);
@@ -282,23 +315,28 @@ bool pathRelativeTo(char *path_out, const char *dir_from, const char *file_to)
 
     char abs_from[MAX_PATH];
     char abs_to[MAX_PATH];
-    if (realpath(dir_from, abs_from) == NULL || realpath(file_to, abs_to) == NULL) {
+    if (realpath(dir_from, abs_from) == NULL || realpath(file_to, abs_to) == NULL)
+    {
         return false;
     }
 
     char *p1 = abs_from;
     char *p2 = abs_to;
-    while (*p1 && (*p1 == *p2)) {
+    while (*p1 && (*p1 == *p2))
+    {
         ++p1, ++p2;
     }
 
-    if (*p2 == '/') {
+    if (*p2 == '/')
+    {
         ++p2;
     }
 
-    if (strlen(p1) > 0) {
+    if (strlen(p1) > 0)
+    {
         int num_parens = countChar(p1, '/') + 1;
-        for (int i = 0; i < num_parens; i++) {
+        for (int i = 0; i < num_parens; i++)
+        {
             strcat(path_out, "../");
         }
     }
@@ -307,166 +345,204 @@ bool pathRelativeTo(char *path_out, const char *dir_from, const char *file_to)
     return true;
 }
 
-void getDisplayName(const char* in_name, char* out_name) {
-	char* tmp;
-	char work_name[256];
-	strcpy(work_name, in_name);
-	strcpy(out_name, in_name);
-	
-	if (suffixMatch("/" PLATFORM, work_name)) { // hide platform from Tools path...
-		tmp = strrchr(work_name, '/');
-		tmp[0] = '\0';
-	}
-	
-	// extract just the filename if necessary
-	tmp = strrchr(work_name, '/');
-	if (tmp) strcpy(out_name, tmp+1);
-	
-	// remove extension(s), eg. .p8.png
-	while ((tmp = strrchr(out_name, '.'))!=NULL) {
-		int len = strlen(tmp);
-		if (len>2 && len<=5) tmp[0] = '\0'; // 1-4 letter extension plus dot (was 1-3, extended for .doom files)
-		else break;
-	}
-	
-	// remove trailing parens (round and square)
-	strcpy(work_name, out_name);
-	while ((tmp=strrchr(out_name, '('))!=NULL || (tmp=strrchr(out_name, '['))!=NULL) {
-		if (tmp==out_name) break;
-		tmp[0] = '\0';
-		tmp = out_name;
-	}
-	
-	// make sure we haven't nuked the entire name
-	if (out_name[0]=='\0') strcpy(out_name, work_name);
-	
-	// remove trailing whitespace
-	tmp = out_name + strlen(out_name) - 1;
-    while(tmp>out_name && isspace((unsigned char)*tmp)) tmp--;
+void getDisplayName(const char *in_name, char *out_name)
+{
+    char *tmp;
+    char work_name[256];
+    strcpy(work_name, in_name);
+    strcpy(out_name, in_name);
+
+    if (suffixMatch("/" PLATFORM, work_name))
+    { // hide platform from Tools path...
+        tmp = strrchr(work_name, '/');
+        tmp[0] = '\0';
+    }
+
+    // extract just the filename if necessary
+    tmp = strrchr(work_name, '/');
+    if (tmp)
+        strcpy(out_name, tmp + 1);
+
+    // remove extension(s), eg. .p8.png
+    while ((tmp = strrchr(out_name, '.')) != NULL)
+    {
+        int len = strlen(tmp);
+        if (len > 2 && len <= 5)
+            tmp[0] = '\0'; // 1-4 letter extension plus dot (was 1-3, extended for .doom files)
+        else
+            break;
+    }
+
+    // remove trailing parens (round and square)
+    strcpy(work_name, out_name);
+    while ((tmp = strrchr(out_name, '(')) != NULL || (tmp = strrchr(out_name, '[')) != NULL)
+    {
+        if (tmp == out_name)
+            break;
+        tmp[0] = '\0';
+        tmp = out_name;
+    }
+
+    // make sure we haven't nuked the entire name
+    if (out_name[0] == '\0')
+        strcpy(out_name, work_name);
+
+    // remove trailing whitespace
+    tmp = out_name + strlen(out_name) - 1;
+    while (tmp > out_name && isspace((unsigned char)*tmp))
+        tmp--;
     tmp[1] = '\0';
 }
-void getEmuName(const char* in_name, char* out_name) { // NOTE: both char arrays need to be MAX_PATH length!
-	char* tmp;
-	strcpy(out_name, in_name);
-	tmp = out_name;
-	
-	// printf("--------\n  in_name: %s\n",in_name); fflush(stdout);
-	
-	// extract just the Roms folder name if necessary
-	if (prefixMatch(ROMS_PATH, tmp)) {
-		tmp += strlen(ROMS_PATH) + 1;
-		char* tmp2 = strchr(tmp, '/');
-		if (tmp2) tmp2[0] = '\0';
-		// printf("    tmp1: %s\n", tmp);
-		strcpy(out_name, tmp);
-		tmp = out_name;
-	}
+void getEmuName(const char *in_name, char *out_name)
+{ // NOTE: both char arrays need to be MAX_PATH length!
+    char *tmp;
+    strcpy(out_name, in_name);
+    tmp = out_name;
 
-	// finally extract pak name from parenths if present
-	tmp = strrchr(tmp, '(');
-	if (tmp) {
-		tmp += 1;
-		// printf("    tmp2: %s\n", tmp);
-		strcpy(out_name, tmp);
-		tmp = strchr(out_name,')');
-		tmp[0] = '\0';
-	}
-	
-	// printf(" out_name: %s\n", out_name); fflush(stdout);
+    // printf("--------\n  in_name: %s\n",in_name); fflush(stdout);
+
+    // extract just the Roms folder name if necessary
+    if (prefixMatch(ROMS_PATH, tmp))
+    {
+        tmp += strlen(ROMS_PATH) + 1;
+        char *tmp2 = strchr(tmp, '/');
+        if (tmp2)
+            tmp2[0] = '\0';
+        // printf("    tmp1: %s\n", tmp);
+        strcpy(out_name, tmp);
+        tmp = out_name;
+    }
+
+    // finally extract pak name from parenths if present
+    tmp = strrchr(tmp, '(');
+    if (tmp)
+    {
+        tmp += 1;
+        // printf("    tmp2: %s\n", tmp);
+        strcpy(out_name, tmp);
+        tmp = strchr(out_name, ')');
+        tmp[0] = '\0';
+    }
+
+    // printf(" out_name: %s\n", out_name); fflush(stdout);
 }
-void getEmuPath(char* emu_name, char* pak_path) {
-	sprintf(pak_path, "%s/Emus/%s/%s.pak/launch.sh", SDCARD_PATH, PLATFORM, emu_name);
-	if (exists(pak_path)) return;
-	sprintf(pak_path, "%s/Emus/%s.pak/launch.sh", PAKS_PATH, emu_name);
+void getEmuPath(char *emu_name, char *pak_path)
+{
+    sprintf(pak_path, "%s/Emus/%s/%s.pak/launch.sh", SDCARD_PATH, PLATFORM, emu_name);
+    if (exists(pak_path))
+        return;
+    sprintf(pak_path, "%s/Emus/%s.pak/launch.sh", PAKS_PATH, emu_name);
 }
 
-void normalizeNewline(char* line) {
-	int len = strlen(line);
-	if (len>1 && line[len-1]=='\n' && line[len-2]=='\r') { // windows!
-		line[len-2] = '\n';
-		line[len-1] = '\0';
-	}
+void normalizeNewline(char *line)
+{
+    int len = strlen(line);
+    if (len > 1 && line[len - 1] == '\n' && line[len - 2] == '\r')
+    { // windows!
+        line[len - 2] = '\n';
+        line[len - 1] = '\0';
+    }
 }
-void trimTrailingNewlines(char* line) {
-	int len = strlen(line);
-	while (len>0 && line[len-1]=='\n') {
-		line[len-1] = '\0'; // trim newline
-		len -= 1;
-	}
+void trimTrailingNewlines(char *line)
+{
+    int len = strlen(line);
+    while (len > 0 && line[len - 1] == '\n')
+    {
+        line[len - 1] = '\0'; // trim newline
+        len -= 1;
+    }
 }
-void trimSortingMeta(char** str) { // eg. `001) `
-	// TODO: this code is suss
-	char* safe = *str;
-	while(isdigit(**str)) *str += 1; // ignore leading numbers
+void trimSortingMeta(char **str)
+{ // eg. `001) `
+    // TODO: this code is suss
+    char *safe = *str;
+    while (isdigit(**str))
+        *str += 1; // ignore leading numbers
 
-	if (*str[0]==')') { // then match a closing parenthesis
-		*str += 1;
-	}
-	else { //  or bail, restoring the string to its original value
-		*str = safe;
-		return;
-	}
-	
-	while(isblank(**str)) *str += 1; // ignore leading space
+    if (*str[0] == ')')
+    { // then match a closing parenthesis
+        *str += 1;
+    }
+    else
+    { //  or bail, restoring the string to its original value
+        *str = safe;
+        return;
+    }
+
+    while (isblank(**str))
+        *str += 1; // ignore leading space
 }
 
 ///////////////////////////////////////
 
-int exists(char* path) {
-	return access(path, F_OK)==0;
+int exists(const char *path)
+{
+    return access(path, F_OK) == 0;
 }
-void touch(char* path) {
-	close(open(path, O_RDWR|O_CREAT, 0777));
+void touch(const char *path)
+{
+    close(open(path, O_RDWR | O_CREAT, 0777));
 }
-void putFile(char* path, char* contents) {
-	FILE* file = fopen(path, "w");
-	if (file) {
-		fputs(contents, file);
-		fclose(file);
-	}
+void putFile(const char *path, const char *contents)
+{
+    FILE *file = fopen(path, "w");
+    if (file)
+    {
+        fputs(contents, file);
+        fclose(file);
+    }
 }
-void getFile(char* path, char* buffer, size_t buffer_size) {
-	FILE *file = fopen(path, "r");
-	if (file) {
-		fseek(file, 0L, SEEK_END);
-		size_t size = ftell(file);
-		if (size>buffer_size-1) size = buffer_size - 1;
-		rewind(file);
-		fread(buffer, sizeof(char), size, file);
-		fclose(file);
-		buffer[size] = '\0';
-	}
+void getFile(const char *path, char *buffer, size_t buffer_size)
+{
+    FILE *file = fopen(path, "r");
+    if (file)
+    {
+        fseek(file, 0L, SEEK_END);
+        size_t size = ftell(file);
+        if (size > buffer_size - 1)
+            size = buffer_size - 1;
+        rewind(file);
+        fread(buffer, sizeof(char), size, file);
+        fclose(file);
+        buffer[size] = '\0';
+    }
 }
-char* allocFile(char* path) { // caller must free!
-	char* contents = NULL;
-	FILE *file = fopen(path, "r");
-	if (file) {
-		fseek(file, 0L, SEEK_END);
-		size_t size = ftell(file);
-		contents = calloc(size+1, sizeof(char));
-		fseek(file, 0L, SEEK_SET);
-		fread(contents, sizeof(char), size, file);
-		fclose(file);
-		contents[size] = '\0';
-	}
-	return contents;
+char *allocFile(const char *path)
+{ // caller must free!
+    char *contents = NULL;
+    FILE *file = fopen(path, "r");
+    if (file)
+    {
+        fseek(file, 0L, SEEK_END);
+        size_t size = ftell(file);
+        contents = calloc(size + 1, sizeof(char));
+        fseek(file, 0L, SEEK_SET);
+        fread(contents, sizeof(char), size, file);
+        fclose(file);
+        contents[size] = '\0';
+    }
+    return contents;
 }
-int getInt(char* path) {
-	int i = 0;
-	FILE *file = fopen(path, "r");
-	if (file!=NULL) {
-		fscanf(file, "%i", &i);
-		fclose(file);
-	}
-	return i;
+int getInt(const char *path)
+{
+    int i = 0;
+    FILE *file = fopen(path, "r");
+    if (file != NULL)
+    {
+        fscanf(file, "%i", &i);
+        fclose(file);
+    }
+    return i;
 }
-void putInt(char* path, int value) {
-	char buffer[8];
-	sprintf(buffer, "%d", value);
-	putFile(path, buffer);
+void putInt(const char *path, int value)
+{
+    char buffer[8];
+    sprintf(buffer, "%d", value);
+    putFile(path, buffer);
 }
 
-uint64_t getMicroseconds(void) {
+uint64_t getMicroseconds(void)
+{
     uint64_t ret;
     struct timeval tv;
 
@@ -478,19 +554,19 @@ uint64_t getMicroseconds(void) {
     return ret;
 }
 
-#define max(a,b)             \
-({                           \
-    __typeof__ (a) _a = (a); \
-    __typeof__ (b) _b = (b); \
-    _a > _b ? _a : _b;       \
-})
+#define max(a, b)               \
+    ({                          \
+        __typeof__(a) _a = (a); \
+        __typeof__(b) _b = (b); \
+        _a > _b ? _a : _b;      \
+    })
 
-#define min(a,b)             \
-({                           \
-    __typeof__ (a) _a = (a); \
-    __typeof__ (b) _b = (b); \
-    _a < _b ? _a : _b;       \
-})
+#define min(a, b)               \
+    ({                          \
+        __typeof__(a) _a = (a); \
+        __typeof__(b) _b = (b); \
+        _a < _b ? _a : _b;      \
+    })
 
 int clamp(int x, int lower, int upper)
 {
