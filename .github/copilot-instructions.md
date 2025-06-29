@@ -2,9 +2,19 @@
 
 ## 🎯 Project Overview
 
-NextUI is a high-performance Custom Firmware (CFW) based on MinUI with a completely rebuilt emulation engine for portable retro gaming devices. It primarily targets the **TrimUI family** (Brick/Smart Pro) offering modern user experience with low-level optimizations.
+NextUI is a high-performance custom firmware for portable retro gaming devices, primarily targeting the **TrimUI family** (Brick/Smart Pro). Built on MinUI foundation with a completely rebuilt emulation engine, NextUI delivers modern user experience with low-level optimizations.
+
+This is a fork/evolution of the MinUI project, enhanced with advanced features for better performance and user experience.
+
+### Repository Information
+
+- **Project**: minOS (NextUI)
+- **Repository**: https://github.com/guiofsaints/minOS
+- **Primary Platform**: tg5040 (TrimUI Smart Pro/Brick)
+- **Development Platform**: desktop (testing only)
 
 ### Key Technologies
+
 - **Languages**: C (90%), C++ (8%), Shell (2%)
 - **Graphics**: SDL2, OpenGL ES 2.0/3.0, multi-pass shaders
 - **Audio**: libsamplerate for high-quality resampling
@@ -15,6 +25,7 @@ NextUI is a high-performance Custom Firmware (CFW) based on MinUI with a complet
 ## 🏗️ Architecture Guidelines
 
 ### Component Structure
+
 ```
 workspace/
 ├── all/                    # Cross-platform components
@@ -28,6 +39,7 @@ workspace/
 ```
 
 ### Design Patterns to Follow
+
 - **HAL (Hardware Abstraction Layer)**: Use `platform.h` interface
 - **Observer Pattern**: For configuration callbacks
 - **Factory Pattern**: For resource management
@@ -36,13 +48,23 @@ workspace/
 ## 🧵 Threading Architecture
 
 ### Main Threads
-- `main_ui_thread` - Primary interface
-- `bg_load_thread` - Background/thumbnail loading  
-- `anim_thread` - Animation worker
-- `audio_thread` - Audio processing/resampling
-- `cpu_monitor_thread` - Performance monitoring
+
+- `main_ui_thread` - Primary interface (rendering, events, navigation)
+- `bg_load_thread` - Background operations (ROM scanning, thumbnails)
+- `anim_thread` - UI animations and transitions
+- `audio_thread` - High-priority audio processing (<20ms latency)
+- `cpu_monitor_thread` - Performance monitoring and CPU scaling
+- `system_service_threads` - Battery, WiFi, LED control
+
+### Ultra-Low Latency Design
+
+- **<20ms audio latency** through dedicated audio thread
+- **Background loading** prevents UI blocking
+- **Hardware acceleration** with OpenGL ES shaders
+- **Dynamic CPU scaling** for optimal power management
 
 ### Synchronization Patterns
+
 ```c
 // Always use SDL synchronization primitives
 static SDL_mutex* queueMutex = NULL;
@@ -58,6 +80,7 @@ SDL_UnlockMutex(queueMutex);
 ## 📋 Coding Standards
 
 ### Naming Conventions
+
 ```c
 // Types: PascalCase
 typedef struct ComponentName {
@@ -76,6 +99,7 @@ bool PLAT_isFeatureSupported(feature_t feature);
 ```
 
 ### Error Handling
+
 ```c
 // Use structured error codes
 typedef enum {
@@ -83,6 +107,8 @@ typedef enum {
     RESULT_ERROR_INVALID_ARGUMENT = -1,
     RESULT_ERROR_OUT_OF_MEMORY = -2,
     RESULT_ERROR_FILE_NOT_FOUND = -3,
+    RESULT_ERROR_HARDWARE_FAILURE = -4,
+    RESULT_ERROR_THREAD_FAILED = -5,
     // ... more specific errors
 } ResultCode;
 
@@ -95,9 +121,17 @@ ResultCode loadConfiguration(const char* config_path) {
     // ... implementation
     return RESULT_SUCCESS;
 }
+
+// Always check return values
+ResultCode result = loadConfiguration(path);
+if (result != RESULT_SUCCESS) {
+    LOG_error("Configuration loading failed: %d", result);
+    return result;
+}
 ```
 
 ### Logging
+
 ```c
 // Use hierarchical logging levels
 #define LOG_trace(fmt, ...) LOG_write(LOG_LEVEL_TRACE, __FILE__, __LINE__, fmt, ##__VA_ARGS__)
@@ -110,6 +144,7 @@ ResultCode loadConfiguration(const char* config_path) {
 ## 🎮 PAK System Development
 
 ### PAK Structure
+
 ```bash
 # Standard PAK directory structure
 EMULATOR.pak/
@@ -120,6 +155,7 @@ EMULATOR.pak/
 ```
 
 ### launch.sh Template
+
 ```bash
 #!/bin/sh
 EMU_EXE=core_name           # Core name without _libretro.so
@@ -128,7 +164,7 @@ ROM="$1"
 
 # Standard PAK boilerplate
 mkdir -p "$BIOS_PATH/$EMU_TAG"
-mkdir -p "$SAVES_PATH/$EMU_TAG" 
+mkdir -p "$SAVES_PATH/$EMU_TAG"
 mkdir -p "$CHEATS_PATH/$EMU_TAG"
 HOME="$USERDATA_PATH"
 cd "$HOME"
@@ -140,6 +176,7 @@ minarch.elf "$CORES_PATH/${EMU_EXE}_libretro.so" "$ROM" &> "$LOGS_PATH/$EMU_TAG.
 ## 🔧 Platform Abstraction
 
 ### Hardware Interface
+
 ```c
 // Always use platform abstraction
 void PLAT_initInput(void);
@@ -161,9 +198,63 @@ typedef struct PLAT_Context {
 } PLAT_Context;
 ```
 
+### Input API Patterns
+
+```c
+// Input initialization and cleanup
+void PAD_init(void);        // Main thread only
+void PAD_quit(void);        // Main thread only
+
+// Input polling (once per frame)
+void PAD_poll(void);        // Main thread only
+
+// Input state checking (thread-safe after PAD_poll)
+int PAD_justPressed(int button);   // BTN_A, BTN_B, BTN_UP, etc.
+int PAD_justReleased(int button);
+int PAD_isPressed(int button);
+
+// Button constants
+#define BTN_A        1
+#define BTN_B        2
+#define BTN_X        4
+#define BTN_Y        8
+#define BTN_UP       16
+#define BTN_DOWN     32
+#define BTN_LEFT     64
+#define BTN_RIGHT    128
+#define BTN_L1       256
+#define BTN_R1       512
+#define BTN_SELECT   1024
+#define BTN_START    2048
+#define BTN_MENU     4096
+```
+
+### Graphics API Patterns
+
+```c
+// Graphics initialization
+SDL_Surface* GFX_init(int mode);   // MODE_MAIN, MODE_MENU, MODE_GAME
+void GFX_quit(void);
+
+// Rendering (thread-owning surface)
+void GFX_clear(SDL_Surface* screen);
+void GFX_flip(SDL_Surface* screen, int sync);  // 0=immediate, 1=vsync
+void GFX_blit(SDL_Surface* src, SDL_Rect* src_rect,
+              SDL_Surface* dst, SDL_Rect* dst_rect);
+
+// Shader system
+void GFX_initShaders(void);
+void GFX_renderWithShaders(SDL_Surface* source);
+
+// Button hints and UI elements
+void GFX_blitButtonGroup(char* labels[], int group,
+                        SDL_Surface* screen, int enabled);
+```
+
 ## 📊 Database Integration
 
 ### SQLite Usage Patterns
+
 ```c
 // GameTime tracking
 typedef struct PlayActivity {
@@ -184,6 +275,7 @@ char* GetString(const char* key, char* buffer, size_t size, const char* default_
 ## 🎨 Graphics Programming
 
 ### SDL2 + OpenGL ES Pattern
+
 ```c
 // Multi-layer rendering (5 layers)
 static SDL_Surface* layers[5];
@@ -213,6 +305,7 @@ void renderWithShaders(SDL_Surface* source) {
 ## 🔧 Build System
 
 ### Makefile Patterns
+
 ```makefile
 # Platform detection
 ifeq ($(PLATFORM),desktop)
@@ -233,9 +326,44 @@ else
 endif
 ```
 
+### Build Commands
+
+```bash
+# Complete build (recommended)
+make build PLATFORM=tg5040
+
+# Build with cores
+make build-cores PLATFORM=tg5040
+
+# Build specific core
+make build-core PLATFORM=tg5040 CORE=fceumm
+
+# System build (no cores)
+make system PLATFORM=tg5040
+
+# Interactive Docker shell
+make shell PLATFORM=tg5040
+
+# Clean build
+make clean PLATFORM=tg5040
+```
+
+### Release Generation
+
+```bash
+# Build release packages
+make all              # Build all platforms
+make special         # Special processing
+make package         # Create ZIP packages
+make done           # Finalization
+
+# Output: releases/NextUI-YYYYMMDD-X-{base,extras,all}.zip
+```
+
 ## 🚫 What NOT to Do
 
 ### Avoid These Patterns
+
 - ❌ **Direct hardware access** without platform abstraction
 - ❌ **Blocking operations** in main UI thread
 - ❌ **Memory leaks** - always pair malloc/free
@@ -245,6 +373,7 @@ endif
 - ❌ **Magic numbers** - use named constants
 
 ### Legacy Code to Avoid
+
 - ❌ SDL 1.2 patterns (use SDL2 exclusively for new code)
 - ❌ Unmaintained platform code (check `_unmaintained/` folder)
 - ❌ Direct OpenGL calls without shader abstraction
@@ -252,6 +381,7 @@ endif
 ## 🧪 Testing Patterns
 
 ### Unit Testing
+
 ```c
 // Test framework pattern
 #define TEST_ASSERT(condition, message) \
@@ -271,6 +401,7 @@ int test_config_system(void) {
 ```
 
 ### Profiling
+
 ```c
 // Performance measurement
 #define PROFILE_BEGIN(name) \
@@ -290,26 +421,49 @@ int test_config_system(void) {
 ## 🔍 Common File Locations
 
 ### Key Headers
+
 - `workspace/all/common/api.h` - Core API definitions
 - `workspace/all/common/defines.h` - System constants
 - `workspace/all/common/config.h` - Configuration structures
 - `workspace/{platform}/platform/platform.h` - Platform interface
 
 ### Important Sources
+
 - `workspace/all/nextui/nextui.c` - Main UI (~2800 LOC)
 - `workspace/all/minarch/minarch.c` - Emulation engine (~7100 LOC)
 - `workspace/all/settings/settings.cpp` - Settings UI
 - `workspace/{platform}/platform/platform.c` - Hardware abstraction
 
 ### Configuration Files
+
 - `makefile` - Main build orchestration
 - `docker-compose.yml` - Development environment
 - `workspace/makefile` - Component compilation
-- `ANÁLISE_DETALHADA_PROJETO.md` - Complete technical documentation
+- `docs/` - Complete technical documentation suite
+
+## 📚 Documentation Structure
+
+### Core Documentation Files
+
+- `docs/architecture.md` - System design and threading model
+- `docs/api-reference.md` - Complete function documentation
+- `docs/build.md` - Comprehensive build system guide
+- `docs/build-quick.md` - Fast build commands
+- `docs/hardware-abstraction.md` - Platform abstraction layer
+- `docs/PAKS.md` - PAK system documentation
+- `docs/modules.md` - Component breakdown
+- `docs/error-handling.md` - Error codes and debugging
+
+### Build Artifacts
+
+- `releases/` - Final release packages
+- `build/` - Temporary build artifacts
+- `skeleton/` - File system templates
 
 ## 💡 Development Tips
 
 ### Performance Considerations
+
 - Use background threads for I/O operations
 - Implement object pooling for frequently allocated structures
 - Profile critical paths regularly
@@ -317,17 +471,59 @@ int test_config_system(void) {
 - Use appropriate compiler optimizations per platform
 
 ### Debugging
+
 - Use LOG_debug() liberally during development
 - Implement memory leak detection in debug builds
 - Profile thread synchronization bottlenecks
 - Test on actual hardware early and often
 
 ### Code Organization
+
 - Keep functions under 100 lines when possible
 - Use clear, descriptive function and variable names
 - Document complex algorithms and threading logic
 - Separate platform-specific code clearly
 
+## 🧪 Testing Patterns
+
+### Unit Testing
+
+```c
+// Test framework pattern
+#define TEST_ASSERT(condition, message) \
+    do { \
+        if (!(condition)) { \
+            fprintf(stderr, "TEST FAILED: %s\n", message); \
+            return -1; \
+        } \
+    } while(0)
+
+int test_config_system(void) {
+    InitSettings();
+    SetInt("test_key", 42);
+    TEST_ASSERT(GetInt("test_key", 0) == 42, "Config set/get failed");
+    return 0;
+}
+```
+
+### Profiling
+
+```c
+// Performance measurement
+#define PROFILE_BEGIN(name) \
+    struct timespec prof_start_##name; \
+    clock_gettime(CLOCK_MONOTONIC, &prof_start_##name)
+
+#define PROFILE_END(name) \
+    do { \
+        struct timespec prof_end_##name; \
+        clock_gettime(CLOCK_MONOTONIC, &prof_end_##name); \
+        double elapsed = (prof_end_##name.tv_sec - prof_start_##name.tv_sec) + \
+                        (prof_end_##name.tv_nsec - prof_start_##name.tv_nsec) / 1e9; \
+        LOG_debug("PROFILE[%s]: %.6f seconds", #name, elapsed); \
+    } while(0)
+```
+
 ---
 
-*This file should be used as a reference for GitHub Copilot to understand NextUI project structure, coding standards, and best practices. Update as the project evolves.*
+_This file should be used as a reference for GitHub Copilot to understand NextUI project structure, coding standards, and best practices. Update as the project evolves._
