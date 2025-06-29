@@ -398,12 +398,12 @@ cd workspace/tg5040/cores && make status-fceumm
 # Verbose build output
 make PLATFORM=tg5040 MAKEFLAGS=
 
-### Build Completo (Recomendado)
+## Complete Build (Recommended)
 ```bash
-# Build completo com cores essenciais
+# Complete build with essential cores
 make full-build PLATFORM=tg5040
 
-# Ou passo a passo:
+# Or step by step:
 make setup
 make build-all-safe PLATFORM=tg5040
 make special
@@ -411,35 +411,35 @@ make package
 make done
 ```
 
-### Build Apenas do Sistema (Sem Cores)
+### System-Only Build (Without Cores)
 ```bash
 make tg5040
 ```
 
-### Build Específico de Cores
+### Specific Core Build
 ```bash
-# Todos os cores (pode falhar em alguns)
+# All cores (may fail on some)
 make build-cores PLATFORM=tg5040
 
-# Apenas cores estáveis
+# Only stable cores
 make build-essential-cores PLATFORM=tg5040
 
-# Core individual
+# Individual core
 make build-core PLATFORM=tg5040 CORE=fceumm
 ```
 
-### Build de Desenvolvimento
+### Development Build
 ```bash
-# Shell interativo no container Docker
+# Interactive shell in Docker container
 make shell PLATFORM=tg5040
 
-# Build nativo para desenvolvimento
+# Native build for development
 make desktop
 ```
 
-## Configurações de Build
+## Build Configuration
 
-### Variáveis de Ambiente
+### Environment Variables
 ```makefile
 BUILD_HASH    = $(git rev-parse --short HEAD)
 BUILD_BRANCH  = $(git rev-parse --abbrev-ref HEAD)
@@ -448,7 +448,7 @@ PLATFORM      = tg5040 | desktop
 COMPILE_CORES = true | false
 ```
 
-### Flags de Compilação (tg5040)
+### Compilation Flags (tg5040)
 ```bash
 CFLAGS = -march=armv8-a+simd -mtune=cortex-a53 -flto -O3 -Ofast
 CFLAGS += -fomit-frame-pointer -ffast-math -funroll-loops
@@ -456,83 +456,83 @@ CFLAGS += -finline-functions -fno-strict-aliasing
 CFLAGS += -DUSE_SDL2 -DUSE_GLES -DGL_GLEXT_PROTOTYPES
 ```
 
-## Resolução de Problemas
+## Troubleshooting
 
-### Erros Comuns
+### Common Errors
 
-#### 1. Git ownership em Docker
+#### 1. Git ownership in Docker
 ```
 fatal: detected dubious ownership in repository
 ```
-**Solução**: Automaticamente resolvido com `git config --global --add safe.directory`
+**Solution**: Automatically resolved with `git config --global --add safe.directory`
 
-#### 3. Cores não encontrados
+#### 2. Cores not found
 ```
 Warning: fceumm_libretro.so not found, skipping
 ```
-**Solução**: Normal se cores não foram compilados. Use verificações condicionais.
+**Solution**: Normal if cores were not compiled. Use conditional checks.
 
-### Debug e Logs
+### Debug and Logs
 
 ```bash
 # Verbose build
 make PLATFORM=tg5040 MAKEFLAGS=
 
-# Verificar cores disponíveis
+# Check available cores
 make cores-json PLATFORM=tg5040
 
-# Status de um core específico
+# Status of specific core
 cd workspace/tg5040/cores && make status-fceumm
 ```
 
-## Threading e Performance
+## Threading and Performance
 
-### Arquitetura Multi-thread
-- `main_ui_thread`: Interface principal
-- `bg_load_thread`: Carregamento em background
-- `anim_thread`: Worker de animações
-- `audio_thread`: Processamento de áudio
-- `cpu_monitor_thread`: Monitoramento de performance
+### Multi-thread Architecture
+- `main_ui_thread`: Main interface
+- `bg_load_thread`: Background loading
+- `anim_thread`: Animation worker
+- `audio_thread`: Audio processing
+- `cpu_monitor_thread`: Performance monitoring
 
-### Otimizações
+### Optimizations
 - **LTO (Link Time Optimization)**: `-flto`
-- **CPU específico**: `-march=armv8-a+simd -mtune=cortex-a53`
-- **Math otimizada**: `-ffast-math -funroll-loops`
+- **CPU specific**: `-march=armv8-a+simd -mtune=cortex-a53`
+- **Optimized math**: `-ffast-math -funroll-loops`
 - **Threading**: pthreads + SDL threads (6+ workers)
 
-## Estrutura Final
+## Final Structure
 
-### BASE/ (Sistema essencial)
+### BASE/ (Essential system)
 ```
 BASE/
-├── Bios/          # BIOS dos sistemas
-├── Roms/          # ROMs organizadas por sistema
+├── Bios/          # System BIOS files
+├── Roms/          # ROMs organized by system
 ├── Saves/         # Save games
-├── Shaders/       # Shaders de vídeo
-├── trimui/        # Instalador específico do TrimUI
-├── em_ui.sh       # Script de inicialização
-├── MinUI.zip      # Payload principal
-└── README.txt     # Instruções
+├── Shaders/       # Video shaders
+├── trimui/        # TrimUI specific installer
+├── em_ui.sh       # Initialization script
+├── MinUI.zip      # Main payload
+└── README.txt     # Instructions
 ```
 
-### EXTRAS/ (Emuladores e ferramentas adicionais)
+### EXTRAS/ (Additional emulators and tools)
 ```
 EXTRAS/
-├── Emus/          # Cores extras por sistema
-├── Tools/         # Ferramentas utilitárias
-├── Overlays/      # Overlays gráficos
-└── README.txt     # Instruções
+├── Emus/          # Extra cores by system
+├── Tools/         # Utility tools
+├── Overlays/      # Graphic overlays
+└── README.txt     # Instructions
 ```
 
-## Dependências
+## Dependencies
 
-### Sistema Host
-- Docker (para cross-compilation)
+### Host System
+- Docker (for cross-compilation)
 - Git
 - Make
 - zip/zipmerge
 
-### Container Docker
+### Docker Container
 - GCC aarch64 cross-compiler
 - SDL2, SDL2_image, SDL2_ttf
 - OpenGL ES 2.0/3.0
@@ -541,13 +541,13 @@ EXTRAS/
 
 ## Releases
 
-### Versionamento
+### Versioning
 ```
 NextUI-YYYYMMDD[-branch]-increment
-Exemplo: NextUI-20250628-main-1
+Example: NextUI-20250628-main-1
 ```
 
-### Tipos de Release
-- **base.zip**: Sistema principal (mínimo funcional)
-- **extras.zip**: Emuladores e ferramentas extras
-- **all.zip**: Pacote completo (base + extras)
+### Release Types
+- **base.zip**: Main system (minimal functional)
+- **extras.zip**: Extra emulators and tools
+- **all.zip**: Complete package (base + extras)

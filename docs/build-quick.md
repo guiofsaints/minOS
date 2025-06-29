@@ -1,34 +1,34 @@
-# NextUI - Guia Rápido de Build
+# NextUI - Quick Build Guide
 
-## 🚀 Build Rápido (TL;DR)
+## 🚀 Quick Build (TL;DR)
 
 ```bash
-# Build completo recomendado
+# Complete recommended build
 make full-build PLATFORM=tg5040
 
-# Ou se preferir passo a passo:
+# Or step by step:
 make setup
 make build PLATFORM=tg5040
-make build-essential-cores PLATFORM=tg5040  # Cores estáveis
+make build-essential-cores PLATFORM=tg5040  # Stable cores
 make system PLATFORM=tg5040
 make cores PLATFORM=tg5040
 make special && make package && make done
 ```
 
-## 📋 Comandos Essenciais
+## 📋 Essential Commands
 
-| Comando | Descrição |
-|---------|-----------|
-| `make full-build PLATFORM=tg5040` | Build completo automatizado |
-| `make tg5040` | Build sistema sem cores |
-| `make build-essential-cores PLATFORM=tg5040` | Cores estáveis apenas |
-| `make build-core PLATFORM=tg5040 CORE=fceumm` | Core específico |
-| `make shell PLATFORM=tg5040` | Shell interativo Docker |
-| `make clean PLATFORM=tg5040` | Limpa build |
+| Command | Description |
+|---------|-------------|
+| `make full-build PLATFORM=tg5040` | Complete automated build |
+| `make tg5040` | System build without cores |
+| `make build-essential-cores PLATFORM=tg5040` | Stable cores only |
+| `make build-core PLATFORM=tg5040 CORE=fceumm` | Specific core |
+| `make shell PLATFORM=tg5040` | Interactive Docker shell |
+| `make clean PLATFORM=tg5040` | Clean build |
 
-## 🎮 Cores Estáveis
+## 🎮 Stable Cores
 
-✅ **Funcionam bem:**
+✅ **Working well:**
 - `fceumm` (Nintendo/Famicom)
 - `gambatte` (Game Boy/GBC)
 - `gpsp` (Game Boy Advance)
@@ -37,31 +37,31 @@ make special && make package && make done
 - `snes9x` (Super Nintendo)
 - `pcsx_rearmed` (PlayStation 1)
 
-## 🔧 Solução de Problemas
+## 🔧 Troubleshooting
 
-| Erro | Solução |
-|------|---------|
-| Git ownership error | Já corrigido automaticamente |
-| Core não encontrado | Normal, use verificações condicionais |
+| Error | Solution |
+|-------|---------|
+| Git ownership error | Already fixed automatically |
+| Core not found | Normal, use conditional checks |
 
-## 📁 Estrutura de Output
+## 📁 Output Structure
 
 ```
 releases/
-├── NextUI-YYYYMMDD-X-base.zip    # Sistema mínimo
-├── NextUI-YYYYMMDD-X-extras.zip  # Emuladores extras
-└── NextUI-YYYYMMDD-X-all.zip     # Pacote completo
+├── NextUI-YYYYMMDD-X-base.zip    # Minimal system
+├── NextUI-YYYYMMDD-X-extras.zip  # Extra emulators
+└── NextUI-YYYYMMDD-X-all.zip     # Complete package
 ```
 
 ## 🐛 Debug
 
 ```bash
-# Ver cores disponíveis
+# View available cores
 make cores-json PLATFORM=tg5040
 
-# Status de core específico
+# Status of specific core
 cd workspace/tg5040/cores && make status-fceumm
 
-# Build verbose
+# Verbose build
 make PLATFORM=tg5040 MAKEFLAGS=
 ```
