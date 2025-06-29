@@ -15,7 +15,7 @@ extern uint32_t THEME_COLOR6_255;
 // Read-only interface for minui.c usage
 // Read/Write interface for settings.cpp usage
 
-typedef int (*FontLoad_callback_t)(const char* path);
+typedef int (*FontLoad_callback_t)(const char *path);
 typedef int (*ColorSet_callback_t)(void);
 
 enum
@@ -37,31 +37,31 @@ typedef struct
 {
 	// Theme
 	int font;
-	//uint32_t color1;
+	// uint32_t color1;
 	uint32_t color1_255; // not screen mapped
-	//uint32_t color2;
+	// uint32_t color2;
 	uint32_t color2_255; // not screen mapped
-	//uint32_t color3;
+	// uint32_t color3;
 	uint32_t color3_255; // not screen mapped
-	//uint32_t color4;
+	// uint32_t color4;
 	uint32_t color4_255; // not screen mapped
-	//uint32_t color5;
+	// uint32_t color5;
 	uint32_t color5_255; // not screen mapped
-	//uint32_t color6;
+	// uint32_t color6;
 	uint32_t color6_255; // not screen mapped
-	//uint32_t backgroundColor;
+	// uint32_t backgroundColor;
 	uint32_t backgroundColor_255; // not screen mapped
 	int thumbRadius;
 	int gameSwitcherScaling; // enum
-	double gameArtWidth;	 // [0,1] -> 0-100% of screen width
+	double gameArtWidth;		 // [0,1] -> 0-100% of screen width
 
 	// font loading/unloading callback
-    FontLoad_callback_t onFontChange;
+	FontLoad_callback_t onFontChange;
 
-    // color update callback
-    ColorSet_callback_t onColorSet;
+	// color update callback
+	ColorSet_callback_t onColorSet;
 
-    // UI
+	// UI
 	bool showClock;
 	bool clock24h;
 	bool showBatteryPercent;
@@ -73,7 +73,7 @@ typedef struct
 
 	// Mute switch
 	bool muteLeds;
-	
+
 	// Power
 	uint32_t screenTimeoutSecs;
 	uint32_t suspendTimeoutSecs;
@@ -88,9 +88,9 @@ typedef struct
 	// Network
 	bool wifi;
 
-} NextUISettings;
+} MinOSSettings;
 
-#define CFG_DEFAULT_FONT_ID 1  // Next
+#define CFG_DEFAULT_FONT_ID 1 // Next
 #define CFG_DEFAULT_COLOR1 0xffffffU
 #define CFG_DEFAULT_COLOR2 0x9b2257U
 #define CFG_DEFAULT_COLOR3 0x1e2329U
@@ -119,11 +119,11 @@ typedef struct
 
 void CFG_init(FontLoad_callback_t fontCallback, ColorSet_callback_t ccb);
 void CFG_print(void);
-void CFG_get(const char *key, char * value);
-// void CFG_defaults(NextUISettings*);
+void CFG_get(const char *key, char *value);
+// void CFG_defaults(MinOSSettings*);
 //  The font id to use as the UI font.
 //  0 - Default MinUI font
-//  1 - Default NextUI font (default)
+//  1 - Default minOS font (default)
 int CFG_getFontId(void);
 void CFG_setFontId(int fontid);
 // The colors to use for the UI. These are 0xRRGGBB values.
@@ -191,7 +191,6 @@ void CFG_setGameArtWidth(double zeroToOne);
 // WiFi on/off (if available)
 bool CFG_getWifi(void);
 void CFG_setWifi(bool on);
-
 
 void CFG_sync(void);
 void CFG_quit(void);

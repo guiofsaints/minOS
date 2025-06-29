@@ -43,11 +43,11 @@ cd $(dirname "$0")
 
 #######################################
 
-EXEC_PATH="/tmp/nextui_exec"
+EXEC_PATH="/tmp/minos_exec"
 NEXT_PATH="/tmp/next"
 touch "$EXEC_PATH"  && sync
 #while [ -f $EXEC_PATH ]; do
-	nextui.elf # &> $LOGS_PATH/nextui.txt
+	minos.elf # &> $LOGS_PATH/minos.txt
 	
 	if [ -f $NEXT_PATH ]; then
 		CMD=`cat $NEXT_PATH`

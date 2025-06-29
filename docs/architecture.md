@@ -1,18 +1,18 @@
-# NextUI System Architecture
+# minOS System Architecture
 
 ## Overview
 
-NextUI implements a modern, multi-threaded firmware architecture designed for high-performance retro gaming on embedded devices. The system follows a layered approach with clear separation between hardware abstraction, core services, and user interface components.
+minOS implements a modern, multi-threaded firmware architecture designed for high-performance retro gaming on embedded devices. The system follows a layered approach with clear separation between hardware abstraction, core services, and user interface components.
 
 ## System Architecture Diagram
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                        NextUI System                           │
+│                         minOS System                           │
 ├─────────────────────────────────────────────────────────────────┤
 │  User Interface Layer                                          │
 │  ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐  │
-│  │    NextUI       │ │    Settings     │ │   Game Time     │  │
+│  │     minOS       │ │    Settings     │ │   Game Time     │  │
 │  │   (Main UI)     │ │    System       │ │   Tracking      │  │
 │  │   ~2800 LOC     │ │                 │ │                 │  │
 │  └─────────────────┘ └─────────────────┘ └─────────────────┘  │
@@ -46,7 +46,7 @@ NextUI implements a modern, multi-threaded firmware architecture designed for hi
 
 ## Threading Model
 
-NextUI employs a sophisticated multi-threading architecture to achieve low latency and responsive user experience:
+minOS employs a sophisticated multi-threading architecture to achieve low latency and responsive user experience:
 
 ### Main Threads
 
@@ -128,8 +128,8 @@ SDL_UnlockMutex(queueMutex);
 
 5. **Application Launch**
    ```c
-   // NextUI main loop
-   nextui_main();
+   // minOS main loop
+   minos_main();
    
    // Or MinArch for direct emulation
    minarch_main(core_path, rom_path);

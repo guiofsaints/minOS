@@ -17,7 +17,8 @@
 ///////////////////////////////////////
 
 // Legacy MinUI settings
-typedef struct SettingsV3 {
+typedef struct SettingsV3
+{
 	int version; // future proofing
 	int brightness;
 	int headphones;
@@ -27,8 +28,9 @@ typedef struct SettingsV3 {
 	int jack;
 } SettingsV3;
 
-// First NextUI settings format
-typedef struct SettingsV4 {
+// First minOS settings format
+typedef struct SettingsV4
+{
 	int version; // future proofing
 	int brightness;
 	int colortemperature; // 0-20
@@ -36,11 +38,12 @@ typedef struct SettingsV4 {
 	int speaker;
 	int mute;
 	int unused[2];
-	int jack; 
+	int jack;
 } SettingsV4;
 
-// Second NextUI settings format
-typedef struct SettingsV5 {
+// Second minOS settings format
+typedef struct SettingsV5
+{
 	int version; // future proofing
 	int brightness;
 	int colortemperature;
@@ -49,11 +52,12 @@ typedef struct SettingsV5 {
 	int mute;
 	int unused[2]; // for future use
 	// NOTE: doesn't really need to be persisted but still needs to be shared
-	int jack; 
+	int jack;
 } SettingsV5;
 
-// Third NextUI settings format
-typedef struct SettingsV6 {
+// Third minOS settings format
+typedef struct SettingsV6
+{
 	int version; // future proofing
 	int brightness;
 	int colortemperature;
@@ -65,10 +69,11 @@ typedef struct SettingsV6 {
 	int exposure;
 	int unused[2]; // for future use
 	// NOTE: doesn't really need to be persisted but still needs to be shared
-	int jack; 
+	int jack;
 } SettingsV6;
 
-typedef struct SettingsV7 {
+typedef struct SettingsV7
+{
 	int version; // future proofing
 	int brightness;
 	int colortemperature;
@@ -85,10 +90,11 @@ typedef struct SettingsV7 {
 	int mutedexposure;
 	int unused[2]; // for future use
 	// NOTE: doesn't really need to be persisted but still needs to be shared
-	int jack; 
+	int jack;
 } SettingsV7;
 
-typedef struct SettingsV8 {
+typedef struct SettingsV8
+{
 	int version; // future proofing
 	int brightness;
 	int colortemperature;
@@ -106,7 +112,7 @@ typedef struct SettingsV8 {
 	int toggled_volume;
 	int unused[2]; // for future use
 	// NOTE: doesn't really need to be persisted but still needs to be shared
-	int jack; 
+	int jack;
 } SettingsV8;
 
 // When incrementing SETTINGS_VERSION, update the Settings typedef and add
@@ -114,24 +120,24 @@ typedef struct SettingsV8 {
 #define SETTINGS_VERSION 8
 typedef SettingsV8 Settings;
 static Settings DefaultSettings = {
-	.version = SETTINGS_VERSION,
-	.brightness = SETTINGS_DEFAULT_BRIGHTNESS,
-	.colortemperature = SETTINGS_DEFAULT_COLORTEMP,
-	.headphones = SETTINGS_DEFAULT_HEADPHONE_VOLUME,
-	.speaker = SETTINGS_DEFAULT_VOLUME,
-	.mute = 0,
-	.contrast = SETTINGS_DEFAULT_CONTRAST,
-	.saturation = SETTINGS_DEFAULT_SATURATION,
-	.exposure = SETTINGS_DEFAULT_EXPOSURE,
-	.toggled_brightness = SETTINGS_DEFAULT_MUTE_NO_CHANGE,
-	.toggled_colortemperature = SETTINGS_DEFAULT_MUTE_NO_CHANGE,
-	.toggled_contrast = SETTINGS_DEFAULT_MUTE_NO_CHANGE,
-	.toggled_saturation = SETTINGS_DEFAULT_MUTE_NO_CHANGE,
-	.toggled_exposure = SETTINGS_DEFAULT_MUTE_NO_CHANGE,
-	.toggled_volume = 0, // mute is default
-	.jack = 0,
+		.version = SETTINGS_VERSION,
+		.brightness = SETTINGS_DEFAULT_BRIGHTNESS,
+		.colortemperature = SETTINGS_DEFAULT_COLORTEMP,
+		.headphones = SETTINGS_DEFAULT_HEADPHONE_VOLUME,
+		.speaker = SETTINGS_DEFAULT_VOLUME,
+		.mute = 0,
+		.contrast = SETTINGS_DEFAULT_CONTRAST,
+		.saturation = SETTINGS_DEFAULT_SATURATION,
+		.exposure = SETTINGS_DEFAULT_EXPOSURE,
+		.toggled_brightness = SETTINGS_DEFAULT_MUTE_NO_CHANGE,
+		.toggled_colortemperature = SETTINGS_DEFAULT_MUTE_NO_CHANGE,
+		.toggled_contrast = SETTINGS_DEFAULT_MUTE_NO_CHANGE,
+		.toggled_saturation = SETTINGS_DEFAULT_MUTE_NO_CHANGE,
+		.toggled_exposure = SETTINGS_DEFAULT_MUTE_NO_CHANGE,
+		.toggled_volume = 0, // mute is default
+		.jack = 0,
 };
-static Settings* settings;
+static Settings *settings;
 
 #define SHM_KEY "/SharedSettings"
 static char SettingsPath[256];
@@ -146,26 +152,33 @@ int scaleSaturation(int);
 int scaleExposure(int);
 int scaleVolume(int);
 
-int getInt(char* path) {
+int getInt(char *path)
+{
 	int i = 0;
 	FILE *file = fopen(path, "r");
-	if (file!=NULL) {
+	if (file != NULL)
+	{
 		fscanf(file, "%i", &i);
 		fclose(file);
 	}
 	return i;
 }
-int exactMatch(char* str1, char* str2) {
-	if (!str1 || !str2) return 0; // NULL isn't safe here
+int exactMatch(char *str1, char *str2)
+{
+	if (!str1 || !str2)
+		return 0; // NULL isn't safe here
 	int len1 = strlen(str1);
-	if (len1!=strlen(str2)) return 0;
-	return (strncmp(str1,str2,len1)==0);
+	if (len1 != strlen(str2))
+		return 0;
+	return (strncmp(str1, str2, len1) == 0);
 }
 
-int peekVersion(const char *filename) {
+int peekVersion(const char *filename)
+{
 	int version = 0;
 	FILE *file = fopen(filename, "r");
-	if (file) {
+	if (file)
+	{
 		fread(&version, sizeof(int), 1, file);
 		fclose(file);
 	}
@@ -174,19 +187,22 @@ int peekVersion(const char *filename) {
 
 static int is_brick = 0;
 
-void InitSettings(void) {	
-	char* device = getenv("DEVICE");
+void InitSettings(void)
+{
+	char *device = getenv("DEVICE");
 	is_brick = exactMatch("brick", device);
-	
+
 	sprintf(SettingsPath, "%s/msettings.bin", getenv("USERDATA_PATH"));
-	
+
 	shm_fd = shm_open(SHM_KEY, O_RDWR | O_CREAT | O_EXCL, 0644); // see if it exists
-	if (shm_fd==-1 && errno==EEXIST) { // already exists
+	if (shm_fd == -1 && errno == EEXIST)
+	{ // already exists
 		// puts("Settings client");
 		shm_fd = shm_open(SHM_KEY, O_RDWR, 0644);
 		settings = mmap(NULL, shm_size, PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
 	}
-	else { // host
+	else
+	{ // host
 		// puts("Settings host"); // keymon
 		is_host = 1;
 		// we created it so set initial size and populate
@@ -195,13 +211,17 @@ void InitSettings(void) {
 
 		// peek the first int from fd, it's the version
 		int version = peekVersion(SettingsPath);
-		if(version > 0) {
+		if (version > 0)
+		{
 			int fd = open(SettingsPath, O_RDONLY);
-			if (fd>=0) {
-				if (version == SETTINGS_VERSION) {
+			if (fd >= 0)
+			{
+				if (version == SETTINGS_VERSION)
+				{
 					read(fd, settings, shm_size);
 				}
-				else if(version==7) {
+				else if (version == 7)
+				{
 					SettingsV7 old;
 					read(fd, &old, sizeof(SettingsV7));
 					// default muted
@@ -223,7 +243,8 @@ void InitSettings(void) {
 					settings->mute = old.mute;
 					settings->jack = old.jack;
 				}
-				else if(version==6) {
+				else if (version == 6)
+				{
 					SettingsV6 old;
 					read(fd, &old, sizeof(SettingsV6));
 					// no muted* settings yet, default values used.
@@ -243,10 +264,11 @@ void InitSettings(void) {
 					settings->mute = old.mute;
 					settings->jack = old.jack;
 				}
-				else if(version==5) {
+				else if (version == 5)
+				{
 					SettingsV5 old;
 					read(fd, &old, sizeof(SettingsV5));
-					// no display settings yet, default values used. 
+					// no display settings yet, default values used.
 					settings->saturation = 0;
 					settings->contrast = 0;
 					settings->exposure = 0;
@@ -258,16 +280,18 @@ void InitSettings(void) {
 					settings->mute = old.mute;
 					settings->jack = old.jack;
 				}
-				else if(version==4) {
+				else if (version == 4)
+				{
 					SettingsV4 old;
 					read(fd, &old, sizeof(SettingsV4));
 					// colortemp was 0-20 here
 					settings->colortemperature = old.colortemperature * 2;
 				}
-				else if(version==3) {
+				else if (version == 3)
+				{
 					SettingsV3 old;
 					read(fd, &old, sizeof(SettingsV3));
-					// no colortemp setting yet, default value used. 
+					// no colortemp setting yet, default value used.
 					// copy the rest
 					settings->brightness = old.brightness;
 					settings->headphones = old.headphones;
@@ -276,44 +300,51 @@ void InitSettings(void) {
 					settings->jack = old.jack;
 					settings->colortemperature = 20;
 				}
-				
+
 				close(fd);
 			}
-			else {
+			else
+			{
 				// load defaults
 				memcpy(settings, &DefaultSettings, shm_size);
 			}
 		}
-		else {
+		else
+		{
 			// load defaults
 			memcpy(settings, &DefaultSettings, shm_size);
 		}
-		
+
 		// these shouldn't be persisted
 		// settings->jack = 0;
 		// settings->hdmi = 0;
 		settings->mute = 0;
 	}
 	// printf("brightness: %i\nspeaker: %i \n", settings->brightness, settings->speaker);
-	 
-	system("amixer sset 'Headphone' 0"); // 100%
+
+	system("amixer sset 'Headphone' 0");			// 100%
 	system("amixer sset 'digital volume' 0"); // 100%
-	system("amixer sset 'DAC Swap' Off"); // Fix L/R channels
+	system("amixer sset 'DAC Swap' Off");			// Fix L/R channels
 	// volume is set with 'digital volume'
 
 	// This will implicitly update all other settings based on FN switch state
 	SetMute(settings->mute);
 }
-int InitializedSettings(void) {
+int InitializedSettings(void)
+{
 	return (settings != NULL);
 }
-void QuitSettings(void) {
+void QuitSettings(void)
+{
 	munmap(settings, shm_size);
-	if (is_host) shm_unlink(SHM_KEY);
+	if (is_host)
+		shm_unlink(SHM_KEY);
 }
-static inline void SaveSettings(void) {
-	int fd = open(SettingsPath, O_CREAT|O_WRONLY, 0644);
-	if (fd>=0) {
+static inline void SaveSettings(void)
+{
+	int fd = open(SettingsPath, O_CREAT | O_WRONLY, 0644);
+	if (fd >= 0)
+	{
 		write(fd, settings, shm_size);
 		close(fd);
 		sync();
@@ -322,27 +353,33 @@ static inline void SaveSettings(void) {
 
 ///////// Getters exposed in public API
 
-int GetBrightness(void) { // 0-10
+int GetBrightness(void)
+{ // 0-10
 	return settings->brightness;
 }
-int GetColortemp(void) { // 0-10
+int GetColortemp(void)
+{ // 0-10
 	return settings->colortemperature;
 }
-int GetVolume(void) { // 0-20
+int GetVolume(void)
+{ // 0-20
 	if (settings->mute && GetMutedVolume() != SETTINGS_DEFAULT_MUTE_NO_CHANGE)
 		return GetMutedVolume();
 	return settings->jack ? settings->headphones : settings->speaker;
 }
 // monitored and set by thread in keymon
-int GetJack(void) {
+int GetJack(void)
+{
 	return settings->jack;
 }
-int GetHDMI(void) {	
+int GetHDMI(void)
+{
 	// printf("GetHDMI() %i\n", settings->hdmi); fflush(stdout);
 	// return settings->hdmi;
 	return 0;
 }
-int GetMute(void) {
+int GetMute(void)
+{
 	return settings->mute;
 }
 int GetContrast(void)
@@ -384,61 +421,72 @@ int GetMutedVolume(void)
 
 ///////// Setters exposed in public API
 
-void SetBrightness(int value) {
+void SetBrightness(int value)
+{
 	SetRawBrightness(scaleBrightness(value));
 	settings->brightness = value;
 	SaveSettings();
 }
-void SetColortemp(int value) {
+void SetColortemp(int value)
+{
 	SetRawColortemp(scaleColortemp(value));
 	settings->colortemperature = value;
 	SaveSettings();
 }
-void SetVolume(int value) { // 0-20
-	if (settings->mute) 
+void SetVolume(int value)
+{ // 0-20
+	if (settings->mute)
 		return SetRawVolume(scaleVolume(GetMutedVolume()));
 	// if (settings->hdmi) return;
-	
-	if (settings->jack) settings->headphones = value;
-	else settings->speaker = value;
+
+	if (settings->jack)
+		settings->headphones = value;
+	else
+		settings->speaker = value;
 
 	SetRawVolume(scaleVolume(value));
 	SaveSettings();
 }
 // monitored and set by thread in keymon
-void SetJack(int value) {
-	printf("SetJack(%i)\n", value); fflush(stdout);
-	
+void SetJack(int value)
+{
+	printf("SetJack(%i)\n", value);
+	fflush(stdout);
+
 	settings->jack = value;
 	SetVolume(GetVolume());
 }
-void SetHDMI(int value) {
+void SetHDMI(int value)
+{
 	// printf("SetHDMI(%i)\n", value); fflush(stdout);
-	
+
 	// if (settings->hdmi!=value) system("/usr/lib/autostart/common/055-hdmi-check");
-	
+
 	// settings->hdmi = value;
 	// if (value) SetRawVolume(100); // max
 	// else SetVolume(GetVolume()); // restore
 }
-void SetMute(int value) {
+void SetMute(int value)
+{
 	settings->mute = value;
-	if (settings->mute) {
+	if (settings->mute)
+	{
 		if (GetMutedVolume() != SETTINGS_DEFAULT_MUTE_NO_CHANGE)
 			SetRawVolume(scaleVolume(GetMutedVolume()));
 		// custom mute mode display settings
 		if (GetMutedBrightness() != SETTINGS_DEFAULT_MUTE_NO_CHANGE)
 			SetRawBrightness(scaleBrightness(GetMutedBrightness()));
-		if(GetMutedColortemp() != SETTINGS_DEFAULT_MUTE_NO_CHANGE) 
+		if (GetMutedColortemp() != SETTINGS_DEFAULT_MUTE_NO_CHANGE)
 			SetRawColortemp(scaleColortemp(GetMutedColortemp()));
-		if(GetMutedContrast() != SETTINGS_DEFAULT_MUTE_NO_CHANGE) 
+		if (GetMutedContrast() != SETTINGS_DEFAULT_MUTE_NO_CHANGE)
 			SetRawContrast(scaleContrast(GetMutedContrast()));
-		if(GetMutedSaturation() != SETTINGS_DEFAULT_MUTE_NO_CHANGE) 
+		if (GetMutedSaturation() != SETTINGS_DEFAULT_MUTE_NO_CHANGE)
 			SetRawSaturation(scaleSaturation(GetMutedSaturation()));
-		if(GetMutedExposure() != SETTINGS_DEFAULT_MUTE_NO_CHANGE) 
+		if (GetMutedExposure() != SETTINGS_DEFAULT_MUTE_NO_CHANGE)
 			SetRawExposure(scaleExposure(GetMutedExposure()));
-	} 
-	else {
+	}
+	else
+	{
 		SetVolume(GetVolume());
 		SetBrightness(GetBrightness());
 		SetColortemp(GetColortemp());
@@ -504,185 +552,398 @@ void SetMutedVolume(int value)
 
 ///////// Platform specific scaling
 
-int scaleVolume(int value) {
+int scaleVolume(int value)
+{
 	return value * 5;
 }
 
-int scaleBrightness(int value) {
+int scaleBrightness(int value)
+{
 	int raw;
-	if (is_brick) {
-		switch (value) {
-			case 0: raw=1; break; 		// 0
-			case 1: raw=8; break; 		// 8
-			case 2: raw=16; break; 		// 8
-			case 3: raw=32; break; 		// 16
-			case 4: raw=48; break;		// 16
-			case 5: raw=72; break;		// 24
-			case 6: raw=96; break;		// 24
-			case 7: raw=128; break;		// 32
-			case 8: raw=160; break;		// 32
-			case 9: raw=192; break;		// 32
-			case 10: raw=255; break;	// 64
+	if (is_brick)
+	{
+		switch (value)
+		{
+		case 0:
+			raw = 1;
+			break; // 0
+		case 1:
+			raw = 8;
+			break; // 8
+		case 2:
+			raw = 16;
+			break; // 8
+		case 3:
+			raw = 32;
+			break; // 16
+		case 4:
+			raw = 48;
+			break; // 16
+		case 5:
+			raw = 72;
+			break; // 24
+		case 6:
+			raw = 96;
+			break; // 24
+		case 7:
+			raw = 128;
+			break; // 32
+		case 8:
+			raw = 160;
+			break; // 32
+		case 9:
+			raw = 192;
+			break; // 32
+		case 10:
+			raw = 255;
+			break; // 64
 		}
 	}
-	else {
-		switch (value) {
-			case 0: raw=4; break; 		//  0
-			case 1: raw=6; break; 		//  2
-			case 2: raw=10; break; 		//  4
-			case 3: raw=16; break; 		//  6
-			case 4: raw=32; break;		// 16
-			case 5: raw=48; break;		// 16
-			case 6: raw=64; break;		// 16
-			case 7: raw=96; break;		// 32
-			case 8: raw=128; break;		// 32
-			case 9: raw=192; break;		// 64
-			case 10: raw=255; break;	// 64
+	else
+	{
+		switch (value)
+		{
+		case 0:
+			raw = 4;
+			break; //  0
+		case 1:
+			raw = 6;
+			break; //  2
+		case 2:
+			raw = 10;
+			break; //  4
+		case 3:
+			raw = 16;
+			break; //  6
+		case 4:
+			raw = 32;
+			break; // 16
+		case 5:
+			raw = 48;
+			break; // 16
+		case 6:
+			raw = 64;
+			break; // 16
+		case 7:
+			raw = 96;
+			break; // 32
+		case 8:
+			raw = 128;
+			break; // 32
+		case 9:
+			raw = 192;
+			break; // 64
+		case 10:
+			raw = 255;
+			break; // 64
 		}
 	}
 	return raw;
 }
-int scaleColortemp(int value) {
+int scaleColortemp(int value)
+{
 	int raw;
-	
-	switch (value) {
-		case 0: raw=-200; break; 		// 8
-		case 1: raw=-190; break; 		// 8
-		case 2: raw=-180; break; 		// 16
-		case 3: raw=-170; break;		// 16
-		case 4: raw=-160; break;		// 24
-		case 5: raw=-150; break;		// 24
-		case 6: raw=-140; break;		// 32
-		case 7: raw=-130; break;		// 32
-		case 8: raw=-120; break;		// 32
-		case 9: raw=-110; break;	// 64
-		case 10: raw=-100; break; 		// 0
-		case 11: raw=-90; break; 		// 8
-		case 12: raw=-80; break; 		// 8
-		case 13: raw=-70; break; 		// 16
-		case 14: raw=-60; break;		// 16
-		case 15: raw=-50; break;		// 24
-		case 16: raw=-40; break;		// 24
-		case 17: raw=-30; break;		// 32
-		case 18: raw=-20; break;		// 32
-		case 19: raw=-10; break;		// 32
-		case 20: raw=0; break;	// 64
-		case 21: raw=10; break; 		// 0
-		case 22: raw=20; break; 		// 8
-		case 23: raw=30; break; 		// 8
-		case 24: raw=40; break; 		// 16
-		case 25: raw=50; break;		// 16
-		case 26: raw=60; break;		// 24
-		case 27: raw=70; break;		// 24
-		case 28: raw=80; break;		// 32
-		case 29: raw=90; break;		// 32
-		case 30: raw=100; break;		// 32
-		case 31: raw=110; break;	// 64
-		case 32: raw=120; break; 		// 0
-		case 33: raw=130; break; 		// 8
-		case 34: raw=140; break; 		// 8
-		case 35: raw=150; break; 		// 16
-		case 36: raw=160; break;		// 16
-		case 37: raw=170; break;		// 24
-		case 38: raw=180; break;		// 24
-		case 39: raw=190; break;		// 32
-		case 40: raw=200; break;		// 32
+
+	switch (value)
+	{
+	case 0:
+		raw = -200;
+		break; // 8
+	case 1:
+		raw = -190;
+		break; // 8
+	case 2:
+		raw = -180;
+		break; // 16
+	case 3:
+		raw = -170;
+		break; // 16
+	case 4:
+		raw = -160;
+		break; // 24
+	case 5:
+		raw = -150;
+		break; // 24
+	case 6:
+		raw = -140;
+		break; // 32
+	case 7:
+		raw = -130;
+		break; // 32
+	case 8:
+		raw = -120;
+		break; // 32
+	case 9:
+		raw = -110;
+		break; // 64
+	case 10:
+		raw = -100;
+		break; // 0
+	case 11:
+		raw = -90;
+		break; // 8
+	case 12:
+		raw = -80;
+		break; // 8
+	case 13:
+		raw = -70;
+		break; // 16
+	case 14:
+		raw = -60;
+		break; // 16
+	case 15:
+		raw = -50;
+		break; // 24
+	case 16:
+		raw = -40;
+		break; // 24
+	case 17:
+		raw = -30;
+		break; // 32
+	case 18:
+		raw = -20;
+		break; // 32
+	case 19:
+		raw = -10;
+		break; // 32
+	case 20:
+		raw = 0;
+		break; // 64
+	case 21:
+		raw = 10;
+		break; // 0
+	case 22:
+		raw = 20;
+		break; // 8
+	case 23:
+		raw = 30;
+		break; // 8
+	case 24:
+		raw = 40;
+		break; // 16
+	case 25:
+		raw = 50;
+		break; // 16
+	case 26:
+		raw = 60;
+		break; // 24
+	case 27:
+		raw = 70;
+		break; // 24
+	case 28:
+		raw = 80;
+		break; // 32
+	case 29:
+		raw = 90;
+		break; // 32
+	case 30:
+		raw = 100;
+		break; // 32
+	case 31:
+		raw = 110;
+		break; // 64
+	case 32:
+		raw = 120;
+		break; // 0
+	case 33:
+		raw = 130;
+		break; // 8
+	case 34:
+		raw = 140;
+		break; // 8
+	case 35:
+		raw = 150;
+		break; // 16
+	case 36:
+		raw = 160;
+		break; // 16
+	case 37:
+		raw = 170;
+		break; // 24
+	case 38:
+		raw = 180;
+		break; // 24
+	case 39:
+		raw = 190;
+		break; // 32
+	case 40:
+		raw = 200;
+		break; // 32
 	}
 	return raw;
 }
-int scaleContrast(int value) {
+int scaleContrast(int value)
+{
 	int raw;
-	
-	switch (value) {
-		// dont offer -5/ raw 0, looks like it might turn off the display completely?
-		case -4: raw=10; break;
-		case -3: raw=20; break;
-		case -2: raw=30; break;
-		case -1: raw=40; break;
-		case 0: raw=50; break;
-		case 1: raw=60; break;
-		case 2: raw=70; break;
-		case 3: raw=80; break;
-		case 4: raw=90; break;
-		case 5: raw=100; break;
+
+	switch (value)
+	{
+	// dont offer -5/ raw 0, looks like it might turn off the display completely?
+	case -4:
+		raw = 10;
+		break;
+	case -3:
+		raw = 20;
+		break;
+	case -2:
+		raw = 30;
+		break;
+	case -1:
+		raw = 40;
+		break;
+	case 0:
+		raw = 50;
+		break;
+	case 1:
+		raw = 60;
+		break;
+	case 2:
+		raw = 70;
+		break;
+	case 3:
+		raw = 80;
+		break;
+	case 4:
+		raw = 90;
+		break;
+	case 5:
+		raw = 100;
+		break;
 	}
 	return raw;
 }
-int scaleSaturation(int value) {
+int scaleSaturation(int value)
+{
 	int raw;
-	
-	switch (value) {
-		case -5: raw=0; break;
-		case -4: raw=10; break;
-		case -3: raw=20; break;
-		case -2: raw=30; break;
-		case -1: raw=40; break;
-		case 0: raw=50; break;
-		case 1: raw=60; break;
-		case 2: raw=70; break;
-		case 3: raw=80; break;
-		case 4: raw=90; break;
-		case 5: raw=100; break;
+
+	switch (value)
+	{
+	case -5:
+		raw = 0;
+		break;
+	case -4:
+		raw = 10;
+		break;
+	case -3:
+		raw = 20;
+		break;
+	case -2:
+		raw = 30;
+		break;
+	case -1:
+		raw = 40;
+		break;
+	case 0:
+		raw = 50;
+		break;
+	case 1:
+		raw = 60;
+		break;
+	case 2:
+		raw = 70;
+		break;
+	case 3:
+		raw = 80;
+		break;
+	case 4:
+		raw = 90;
+		break;
+	case 5:
+		raw = 100;
+		break;
 	}
 	return raw;
 }
-int scaleExposure(int value) {
+int scaleExposure(int value)
+{
 	int raw;
-	
-	switch (value) {
-		// stock OS also avoids setting anything lower, so we do the same here.
-		case -4: raw=10; break;
-		case -3: raw=20; break;
-		case -2: raw=30; break;
-		case -1: raw=40; break;
-		case 0: raw=50; break;
-		case 1: raw=60; break;
-		case 2: raw=70; break;
-		case 3: raw=80; break;
-		case 4: raw=90; break;
-		case 5: raw=100; break;
+
+	switch (value)
+	{
+	// stock OS also avoids setting anything lower, so we do the same here.
+	case -4:
+		raw = 10;
+		break;
+	case -3:
+		raw = 20;
+		break;
+	case -2:
+		raw = 30;
+		break;
+	case -1:
+		raw = 40;
+		break;
+	case 0:
+		raw = 50;
+		break;
+	case 1:
+		raw = 60;
+		break;
+	case 2:
+		raw = 70;
+		break;
+	case 3:
+		raw = 80;
+		break;
+	case 4:
+		raw = 90;
+		break;
+	case 5:
+		raw = 100;
+		break;
 	}
 	return raw;
 }
 
 ///////// Platform specific, unscaled accessors
 
-#define DISP_LCD_SET_BRIGHTNESS  0x102
-void SetRawBrightness(int val) { // 0 - 255
+#define DISP_LCD_SET_BRIGHTNESS 0x102
+void SetRawBrightness(int val)
+{ // 0 - 255
 	// if (settings->hdmi) return;
-	
-	printf("SetRawBrightness(%i)\n", val); fflush(stdout);
 
-    int fd = open("/dev/disp", O_RDWR);
-	if (fd) {
-	    unsigned long param[4]={0,val,0,0};
+	printf("SetRawBrightness(%i)\n", val);
+	fflush(stdout);
+
+	int fd = open("/dev/disp", O_RDWR);
+	if (fd)
+	{
+		unsigned long param[4] = {0, val, 0, 0};
 		ioctl(fd, DISP_LCD_SET_BRIGHTNESS, &param);
 		close(fd);
 	}
 }
-void SetRawColortemp(int val) { // 0 - 255
+void SetRawColortemp(int val)
+{ // 0 - 255
 	// if (settings->hdmi) return;
-	
-	printf("SetRawColortemp(%i)\n", val); fflush(stdout);
+
+	printf("SetRawColortemp(%i)\n", val);
+	fflush(stdout);
 
 	FILE *fd = fopen("/sys/class/disp/disp/attr/color_temperature", "w");
-	if (fd) {
+	if (fd)
+	{
 		fprintf(fd, "%i", val);
 		fclose(fd);
 	}
 }
-void SetRawVolume(int val) { // 0-100
-	printf("SetRawVolume(%i)\n", val); fflush(stdout);
-	if (settings->mute) val = scaleVolume(GetMutedVolume());
-	
+void SetRawVolume(int val)
+{ // 0-100
+	printf("SetRawVolume(%i)\n", val);
+	fflush(stdout);
+	if (settings->mute)
+		val = scaleVolume(GetMutedVolume());
+
 	// Note: 'digital volume' mapping is reversed
 	char cmd[256];
-	sprintf(cmd, "amixer sset 'digital volume' -M %i%% &> /dev/null", 100-val);
+	sprintf(cmd, "amixer sset 'digital volume' -M %i%% &> /dev/null", 100 - val);
 	system(cmd);
-	
+
 	// Setting just 'digital volume' to 0 still plays audio quietly. Also set DAC volume to 0
-	if (val == 0) system("amixer sset 'DAC volume' 0 &> /dev/null");
-	else system("amixer sset 'DAC volume' 160 &> /dev/null"); // 160=0dB=max for 'DAC volume'
+	if (val == 0)
+		system("amixer sset 'DAC volume' 0 &> /dev/null");
+	else
+		system("amixer sset 'DAC volume' 160 &> /dev/null"); // 160=0dB=max for 'DAC volume'
 
 	// TODO: unfortunately doing it this way creating a linker nightmare
 	// struct mixer *mixer = mixer_open(0);
@@ -702,42 +963,51 @@ void SetRawVolume(int val) { // 0-100
 	// mixer_ctl_set_value(ctl,0,val);
 	// mixer_ctl_set_value(ctl,1,val);
 	// mixer_close(mixer);
-	
+
 	// char cmd[256];
 	// sprintf(cmd, "amixer sset 'digital volume' %i%% &> /dev/null", 100-val);
 	// // puts(cmd); fflush(stdout);
 	// system(cmd);
 }
 
-void SetRawContrast(int val){
+void SetRawContrast(int val)
+{
 	// if (settings->hdmi) return;
-	
-	printf("SetRawContrast(%i)\n", val); fflush(stdout);
+
+	printf("SetRawContrast(%i)\n", val);
+	fflush(stdout);
 
 	FILE *fd = fopen("/sys/class/disp/disp/attr/enhance_contrast", "w");
-	if (fd) {
+	if (fd)
+	{
 		fprintf(fd, "%i", val);
 		fclose(fd);
 	}
 }
-void SetRawSaturation(int val){
+void SetRawSaturation(int val)
+{
 	// if (settings->hdmi) return;
 
-	printf("SetRawSaturation(%i)\n", val); fflush(stdout);
+	printf("SetRawSaturation(%i)\n", val);
+	fflush(stdout);
 
 	FILE *fd = fopen("/sys/class/disp/disp/attr/enhance_saturation", "w");
-	if (fd) {
+	if (fd)
+	{
 		fprintf(fd, "%i", val);
 		fclose(fd);
 	}
 }
-void SetRawExposure(int val){
+void SetRawExposure(int val)
+{
 	// if (settings->hdmi) return;
 
-	printf("SetRawExposure(%i)\n", val); fflush(stdout);
+	printf("SetRawExposure(%i)\n", val);
+	fflush(stdout);
 
 	FILE *fd = fopen("/sys/class/disp/disp/attr/enhance_bright", "w");
-	if (fd) {
+	if (fd)
+	{
 		fprintf(fd, "%i", val);
 		fclose(fd);
 	}

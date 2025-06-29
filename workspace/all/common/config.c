@@ -2,7 +2,7 @@
 #include "defines.h"
 #include "utils.h"
 
-NextUISettings settings = {0};
+MinOSSettings settings = {0};
 
 // deprecated
 uint32_t THEME_COLOR1_255;
@@ -12,18 +12,19 @@ uint32_t THEME_COLOR4_255;
 uint32_t THEME_COLOR5_255;
 uint32_t THEME_COLOR6_255;
 
-static inline uint32_t HexToUint32_unmapped(const char *hexColor) {
+static inline uint32_t HexToUint32_unmapped(const char *hexColor)
+{
     // Convert the hex string to an unsigned long
     uint32_t value = (uint32_t)strtoul(hexColor, NULL, 16);
     return value;
 }
 
-void CFG_defaults(NextUISettings *cfg)
+void CFG_defaults(MinOSSettings *cfg)
 {
     if (!cfg)
         return;
 
-    NextUISettings defaults = {
+    MinOSSettings defaults = {
         .font = CFG_DEFAULT_FONT_ID,
         .color1_255 = CFG_DEFAULT_COLOR1,
         .color2_255 = CFG_DEFAULT_COLOR2,
@@ -55,7 +56,7 @@ void CFG_defaults(NextUISettings *cfg)
         .stateFormat = CFG_DEFAULT_STATEFORMAT,
 
         .wifi = CFG_DEFAULT_WIFI,
-};
+    };
 
     *cfg = defaults;
 }
@@ -68,7 +69,7 @@ void CFG_init(FontLoad_callback_t cb, ColorSet_callback_t ccb)
     bool fontLoaded = false;
 
     char settingsPath[MAX_PATH];
-    sprintf(settingsPath, "%s/minuisettings.txt", SHARED_USERDATA_PATH);
+    sprintf(settingsPath, "%s/minossettings.txt", SHARED_USERDATA_PATH);
     FILE *file = fopen(settingsPath, "r");
     if (file == NULL)
     {
@@ -240,7 +241,7 @@ void CFG_setFontId(int id)
     else
         fontPath = RES_PATH "/font2.ttf";
 
-    if(settings.onFontChange)
+    if (settings.onFontChange)
         settings.onFontChange(fontPath);
 }
 
@@ -302,7 +303,7 @@ void CFG_setColor(int color_id, uint32_t color)
         break;
     }
 
-    if(settings.onColorSet)
+    if (settings.onColorSet)
         settings.onColorSet();
 }
 
@@ -598,7 +599,8 @@ void CFG_get(const char *key, char *value)
             sprintf(value, "\"%s\"", RES_PATH "/font2.ttf");
     }
 
-    else {
+    else
+    {
         sprintf(value, "");
     }
 }
@@ -607,7 +609,7 @@ void CFG_sync(void)
 {
     // write to file
     char settingsPath[MAX_PATH];
-    sprintf(settingsPath, "%s/minuisettings.txt", getenv("SHARED_USERDATA_PATH"));
+    sprintf(settingsPath, "%s/minossettings.txt", getenv("SHARED_USERDATA_PATH"));
     FILE *file = fopen(settingsPath, "w");
     if (file == NULL)
     {

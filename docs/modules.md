@@ -1,4 +1,4 @@
-# NextUI Module Documentation
+# minOS Module Documentation
 
 ## Core Modules
 

@@ -1,9 +1,9 @@
-title NextUI System Architecture
+title minOS System Architecture
 
-NextUI System [icon: layers] {
+minOS System [icon: layers] {
   // User Interface Layer
   User Interface Layer [icon: monitor, color: blue] {
-    NextUI Main UI [icon: layout, label: "NextUI (Main UI)"]
+    minOS Main UI [icon: layout, label: "minOS (Main UI)"]
     Settings System [icon: settings]
     Game Time Tracking [icon: clock]
   }
@@ -131,7 +131,7 @@ Logging Framework > User Level
 // Data flow: UI triggers ROM loading
 
 // Data flow: UI triggers audio/graphics
-NextUI Main UI > Graphics Pipeline
+minOS Main UI > Graphics Pipeline
 MinArch Emulation > Audio Pipeline
 
 // Core Services to APIs
@@ -161,18 +161,18 @@ Application Level > User Level
 Common API Layer > Platform API
 Common API Layer > Platform API
 Common API Layer > Platform API
-NextUI Main UI < Main UI Thread
-NextUI Main UI < Animation Thread
+minOS Main UI < Main UI Thread
+minOS Main UI < Animation Thread
 Audio Engine < Audio Thread
 Core Services Layer < CPU Monitor Thread
 Hardware Abstraction Layer < System Service Threads
-NextUI Main UI < UI Update
+minOS Main UI < UI Update
 Core Services Layer < Configuration API
 User Interface Layer < Configuration API
 Hardware Level < Logging Framework
 System Level < Logging Framework
 Application Level < Logging Framework
-User Selection < NextUI Main UI
+User Selection < minOS Main UI
 Libretro Core < MinArch Emulation
 Game Frame < MinArch Emulation
 Libsamplerate < Audio Engine

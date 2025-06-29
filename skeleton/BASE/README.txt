@@ -1,20 +1,20 @@
-NextUI is a high-performance custom firmware for the Trimui Smart (and Pro) and Brick devices, derived from MinUI with significant performance and user experience improvements.
+minOS is a high-performance custom firmware for the Trimui Smart (and Pro) and Brick devices, derived from MinUI with significant performance and user experience improvements.
 
 Source:
-https://github.com/NextUI/NextUI
+https://github.com/guiofsaints/minOS
 
 ----------------------------------------
 Installing
 
 PREFACE
 
-NextUI has two essential parts: an installer/updater zip archive named "NextUI.zip" and a bootstrap folder for Trimui devices.
+minOS has two essential parts: an installer/updater zip archive named "minOS.zip" and a bootstrap folder for Trimui devices.
 
 The primary card should be a reputable brand and freshly formatted as FAT32 (MBR).
 
 CAVEATS
 
-While NextUI can be updated from any device once installed, the device requires minor changes to NAND and therefore needs to be installed from the specific device before using. When in doubt, follow the installation instructions; if all the necessary bits are already installed, the installer will just act as an updater instead.
+While minOS can be updated from any device once installed, the device requires minor changes to NAND and therefore needs to be installed from the specific device before using. When in doubt, follow the installation instructions; if all the necessary bits are already installed, the installer will just act as an updater instead.
 
 ALL
 
@@ -22,14 +22,14 @@ Preload the "Bios" and "Roms" folders then copy both to the root of your SD card
 
 TRIMUI SMART / TRIMUI SMART PRO / TRIMUI BRICK
 
-Copy the "trimui" folder and "NextUI.zip" (without unzipping) to the root of the SD card.
+Copy the "trimui" folder and "minOS.zip" (without unzipping) to the root of the SD card.
 
 ----------------------------------------
 Updating
 
 ALL
 
-Copy "NextUI.zip" (without unzipping) to the root of the SD card containing your Roms.
+Copy "minOS.zip" (without unzipping) to the root of the SD card containing your Roms.
 
 ----------------------------------------
 Shortcuts

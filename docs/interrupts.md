@@ -1,8 +1,8 @@
-# NextUI Interrupt Handling
+# minOS Interrupt Handling
 
 ## Overview
 
-NextUI firmware operates on Linux-based embedded systems where interrupt handling is primarily managed by the kernel. The firmware interacts with hardware interrupts through device drivers, signal handlers, and hardware abstraction layers.
+minOS firmware operates on Linux-based embedded systems where interrupt handling is primarily managed by the kernel. The firmware interacts with hardware interrupts through device drivers, signal handlers, and hardware abstraction layers.
 
 ## Interrupt Architecture
 

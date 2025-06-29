@@ -1,8 +1,10 @@
-# NextUI Documentation
+# minOS Documentation
 
-## Overview
+## ONextUI consists of several core components:
 
-NextUI is a high-performance custom firmware for portable retro gaming devices, primarily targeting the TrimUI family (Brick/Smart Pro). Built on MinUI foundation with a completely rebuilt emulation engine, NextUI delivers modern user experience with low-level optimizations.
+- **NextUI** - Main user interface (C + SDL2 + OpenGL, ~2800 LOC)view
+
+minOS is a high-performance custom firmware for portable retro gaming devices, primarily targeting the TrimUI family (Brick/Smart Pro). Built on MinUI foundation with a completely rebuilt emulation engine, minOS delivers modern user experience with low-level optimizations.
 
 This is a fork/evolution of the MinUI project, enhanced with advanced features for better performance and user experience.
 
@@ -27,9 +29,9 @@ This is a fork/evolution of the MinUI project, enhanced with advanced features f
 
 ## System Architecture
 
-NextUI consists of several core components:
+minOS consists of several core components:
 
-- **NextUI** - Main user interface (C + SDL2 + OpenGL, ~2800 LOC)
+- **minOS** - Main user interface (C + SDL2 + OpenGL, ~2800 LOC)
 - **MinArch** - Emulation engine with libretro integration (~7100 LOC)
 - **Settings** - Configuration system (C++ with UI components)
 - **Common API** - Shared libraries and hardware abstraction
@@ -174,9 +176,9 @@ For complete build documentation, see [Build Guide](docs/build.md) and [Quick Bu
 ### From Releases
 
 1. Download latest release from [GitHub Releases](https://github.com/guiofsaints/minOS/releases)
-   - `NextUI-YYYYMMDD-X-base.zip` - Core system files
-   - `NextUI-YYYYMMDD-X-extras.zip` - Additional tools and emulators 
-   - `NextUI-YYYYMMDD-X-all.zip` - Complete package (base + extras)
+   - `minOS-YYYYMMDD-X-base.zip` - Core system files
+   - `minOS-YYYYMMDD-X-extras.zip` - Additional tools and emulators 
+   - `minOS-YYYYMMDD-X-all.zip` - Complete package (base + extras)
 
 2. Format SD card as FAT32
 3. Extract release archive to SD card root
@@ -190,7 +192,7 @@ After building (see Build Instructions above), the release files will be created
 
 ```
 SD Card Root/
-├── .system/           # NextUI system files (hidden)
+├── .system/           # minOS system files (hidden)
 ├── Bios/             # BIOS files for emulators
 ├── Cheats/           # Cheat files
 ├── Emus/             # Emulator PAK files
@@ -229,7 +231,7 @@ For development, use the provided Docker environment and follow the coding stand
 
 ### Key Development Files
 
-- **NextUI Main UI:** `workspace/all/nextui/nextui.c` (~2800 LOC)
+- **minOS Main UI:** `workspace/all/minos/minos.c` (~2800 LOC)
 - **MinArch Engine:** `workspace/all/minarch/minarch.c` (~7100 LOC)  
 - **Settings System:** `workspace/all/settings/settings.cpp`
 - **Platform Abstraction:** `workspace/tg5040/platform/platform.c`
@@ -241,4 +243,4 @@ This project is hosted at: https://github.com/guiofsaints/minOS
 
 ## License
 
-NextUI is released under the MIT License. See LICENSE file for details.
+minOS is released under the MIT License. See LICENSE file for details.

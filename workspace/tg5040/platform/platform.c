@@ -2551,7 +2551,7 @@ void PLAT_powerOff(void)
 	{
 		VIB_singlePulse(VIB_bootStrength, VIB_bootDuration_ms);
 	}
-	system("rm -f /tmp/nextui_exec && sync");
+	system("rm -f /tmp/minos_exec && sync");
 	sleep(2);
 
 	SetRawVolume(MUTE_VOLUME_RAW);

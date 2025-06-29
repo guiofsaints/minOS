@@ -3,7 +3,7 @@
 
 PLATFORM="tg5040"
 SDCARD_PATH="/mnt/SDCARD"
-UPDATE_PATH="$SDCARD_PATH/MinUI.zip"
+UPDATE_PATH="$SDCARD_PATH/minOS.zip"
 PAKZ_PATH="$SDCARD_PATH/*.pakz"
 SYSTEM_PATH="$SDCARD_PATH/.system"
 
@@ -32,7 +32,7 @@ fi
 # leds_off
 echo 0 > /sys/class/led_anim/max_scale
 
-# generic NextUI package install
+# generic minOS package install
 for pakz in $PAKZ_PATH; do
 	if [ ! -e "$pakz" ]; then continue; fi
 	echo "Installing $pakz"
@@ -62,7 +62,7 @@ if [ -f "$UPDATE_PATH" ]; then
 	# clean replacement for core paths
 	rm -rf $SYSTEM_PATH/$PLATFORM/bin
 	rm -rf $SYSTEM_PATH/$PLATFORM/lib
-	rm -rf $SYSTEM_PATH/$PLATFORM/paks/MinUI.pak
+	rm -rf $SYSTEM_PATH/$PLATFORM/paks/minOS.pak
 
 	./unzip -o "$UPDATE_PATH" -d "$SDCARD_PATH" # &> /mnt/SDCARD/unzip.txt
 	rm -f "$UPDATE_PATH"
@@ -73,7 +73,7 @@ if [ -f "$UPDATE_PATH" ]; then
 	fi
 fi
 
-LAUNCH_PATH="$SYSTEM_PATH/$PLATFORM/paks/MinUI.pak/launch.sh"
+LAUNCH_PATH="$SYSTEM_PATH/$PLATFORM/paks/minOS.pak/launch.sh"
 if [ -f "$LAUNCH_PATH" ] ; then
 	"$LAUNCH_PATH"
 fi

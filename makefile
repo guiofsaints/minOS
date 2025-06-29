@@ -1,4 +1,4 @@
-# NextUI
+# minOS
 
 # NOTE: this runs on the host system (eg. macOS) not in a docker image
 # it has to, otherwise we'd be running a docker in a docker and oof
@@ -29,7 +29,7 @@ ifeq ($(PLATFORM), desktop)
 else
 	TOOLCHAIN_FILE := makefile.toolchain
 endif
-RELEASE_BASE=NextUI-$(RELEASE_TIME)$(RELEASE_BETA)
+RELEASE_BASE=minOS-$(RELEASE_TIME)$(RELEASE_BETA)
 RELEASE_DOT:=$(shell find ./releases/. -regex ".*/${RELEASE_BASE}-[0-9]+-base\.zip" | wc -l | sed 's/ //g')
 RELEASE_NAME ?= $(RELEASE_BASE)-$(RELEASE_DOT)
 
@@ -74,7 +74,7 @@ ifneq ($(PLATFORM), desktop)
 	cp ./workspace/all/syncsettings/build/$(PLATFORM)/syncsettings.elf ./build/SYSTEM/$(PLATFORM)/bin/
 endif
 	cp ./workspace/$(PLATFORM)/libmsettings/libmsettings.so ./build/SYSTEM/$(PLATFORM)/lib
-	cp ./workspace/all/nextui/build/$(PLATFORM)/nextui.elf ./build/SYSTEM/$(PLATFORM)/bin/
+	cp ./workspace/all/minos/build/$(PLATFORM)/minos.elf ./build/SYSTEM/$(PLATFORM)/bin/
 	cp ./workspace/all/minarch/build/$(PLATFORM)/minarch.elf ./build/SYSTEM/$(PLATFORM)/bin/
 	cp ./workspace/all/nextval/build/$(PLATFORM)/nextval.elf ./build/SYSTEM/$(PLATFORM)/bin/
 	cp ./workspace/all/clock/build/$(PLATFORM)/clock.elf ./build/EXTRAS/Tools/$(PLATFORM)/Clock.pak/
@@ -280,7 +280,7 @@ build-essential-cores:
 	
 build-all-safe:
 	# Build everything with safe error handling
-	@echo "Building NextUI with essential cores..."
+	@echo "Building minOS with essential cores..."
 	make build PLATFORM=$(PLATFORM)
 	make build-essential-cores PLATFORM=$(PLATFORM)
 	make system PLATFORM=$(PLATFORM)

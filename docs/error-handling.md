@@ -1,8 +1,8 @@
-# NextUI Error Handling
+# minOS Error Handling
 
 ## Overview
 
-NextUI implements a comprehensive error handling strategy designed for embedded systems where robustness and reliability are critical. The firmware uses a multi-layered approach to error detection, reporting, recovery, and prevention.
+minOS implements a comprehensive error handling strategy designed for embedded systems where robustness and reliability are critical. The firmware uses a multi-layered approach to error detection, reporting, recovery, and prevention.
 
 ## Error Handling Philosophy
 
@@ -98,7 +98,7 @@ void LOG_write(ErrorLevel level, const char* file, int line, const char* fmt, ..
     // Open log file on first use
     if (!log_file) {
         char log_path[256];
-        snprintf(log_path, sizeof(log_path), "%s/logs/nextui.log", USERDATA_PATH);
+        snprintf(log_path, sizeof(log_path), "%s/logs/minos.log", USERDATA_PATH);
         log_file = fopen(log_path, "a");
     }
     
@@ -899,4 +899,4 @@ void generate_error_report(void) {
 }
 ```
 
-This comprehensive error handling system ensures NextUI can gracefully handle various failure scenarios while maintaining system stability and providing meaningful feedback to both users and developers.
+This comprehensive error handling system ensures minOS can gracefully handle various failure scenarios while maintaining system stability and providing meaningful feedback to both users and developers.

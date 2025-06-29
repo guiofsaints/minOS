@@ -18,7 +18,7 @@ all:
 ifeq ($(PLATFORM), desktop)
 	cd ./$(PLATFORM)/libmsettings && make
 	cd ./$(PLATFORM) && make early # eg. other libs
-	cd ./all/nextui/ && make
+	cd ./all/minos/ && make
 	cd ./all/minarch/ && make
 	cd ./all/battery/ && make
 	cd ./all/clock/ && make
@@ -35,7 +35,7 @@ else
 	cd ./$(PLATFORM)/libmsettings && make
 	cd ./$(PLATFORM) && make early # eg. other libs
 	cd ./$(PLATFORM)/keymon && make
-	cd ./all/nextui/ && make
+	cd ./all/minos/ && make
 	cd ./all/minarch/ && make
 	cd ./all/battery/ && make
 	cd ./all/clock/ && make
@@ -76,7 +76,7 @@ ifneq ($(PLATFORM), desktop)
 	cd ./all/bootlogo/ && make clean
 endif
 	cd ./$(PLATFORM)/libmsettings && make clean
-	cd ./all/nextui/ && make clean
+	cd ./all/minos/ && make clean
 	cd ./all/minarch/ && make clean
 	cd ./all/battery/ && make clean
 	cd ./all/clock/ && make clean

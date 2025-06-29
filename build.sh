@@ -1,6 +1,6 @@
 #!/bin/bash
-# NextUI Build Script
-# Automatiza o processo de build do NextUI
+# minOS Build Script
+# Automatiza o processo de build do minOS
 
 set -e  # Exit on error
 
@@ -19,7 +19,7 @@ VERBOSE="false"
 
 # Functions
 print_usage() {
-    echo "NextUI Build Script"
+    echo "minOS Build Script"
     echo ""
     echo "Usage: $0 [OPTIONS]"
     echo ""
@@ -99,7 +99,7 @@ if [[ "$VERBOSE" == "true" ]]; then
     MAKE_FLAGS="MAKEFLAGS="
 fi
 
-log "NextUI Build Starting..."
+log "minOS Build Starting..."
 log "Platform: $PLATFORM"
 log "Cores: $BUILD_CORES"
 log "Clean first: $CLEAN_FIRST"

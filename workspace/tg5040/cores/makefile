@@ -41,7 +41,7 @@ pcsx_rearmed_SUBMODULES = frontend/libpicofe
 picodrive_REPO = https://github.com/irixxxx/picodrive
 picodrive_MAKEFILE = Makefile.libretro
 # No background Audio on Sega CD
-# https://github.com/LoveRetro/NextUI/issues/68
+# https://github.com/guiofsaints/minOS/issues/68
 picodrive_HASH = b0be121
 
 pokemini_REPO = https://github.com/libretro/PokeMini
