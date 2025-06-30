@@ -2486,7 +2486,8 @@ static void Config_load(void)
 {
 	LOG_info("Config_load\n");
 
-	config.device_tag = getenv("DEVICE");
+	// TrimUI Brick device tag hardcoded
+	config.device_tag = "brick";
 	LOG_info("config.device_tag %s\n", config.device_tag);
 
 	// update for crop overscan support

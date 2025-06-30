@@ -3792,11 +3792,8 @@ void LEDS_updateLeds()
 {
 	if (pwr.charge > PWR_LOW_CHARGE)
 	{
-		int lightsize = 3;
-		char *device = getenv("DEVICE");
-		int is_brick = exactMatch("brick", device);
-		if (is_brick)
-			lightsize = 4;
+		// TrimUI Brick LED count hardcoded
+		int lightsize = 4;
 		for (int i = 0; i < lightsize; i++)
 		{
 			PLAT_setLedBrightness(&(*lights)[i]);		// set brightness of each led

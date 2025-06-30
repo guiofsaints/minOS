@@ -185,12 +185,12 @@ int peekVersion(const char *filename)
 	return version;
 }
 
-static int is_brick = 0;
+// TrimUI Brick support hardcoded
+static int is_brick = 1; // Always TrimUI Brick
 
 void InitSettings(void)
 {
-	char *device = getenv("DEVICE");
-	is_brick = exactMatch("brick", device);
+	// TrimUI Brick device hardcoded
 
 	sprintf(SettingsPath, "%s/msettings.bin", getenv("USERDATA_PATH"));
 
@@ -560,83 +560,42 @@ int scaleVolume(int value)
 int scaleBrightness(int value)
 {
 	int raw;
-	if (is_brick)
+	// TrimUI Brick brightness scaling hardcoded
+	switch (value)
 	{
-		switch (value)
-		{
-		case 0:
-			raw = 1;
-			break; // 0
-		case 1:
-			raw = 8;
-			break; // 8
-		case 2:
-			raw = 16;
-			break; // 8
-		case 3:
-			raw = 32;
-			break; // 16
-		case 4:
-			raw = 48;
-			break; // 16
-		case 5:
-			raw = 72;
-			break; // 24
-		case 6:
-			raw = 96;
-			break; // 24
-		case 7:
-			raw = 128;
-			break; // 32
-		case 8:
-			raw = 160;
-			break; // 32
-		case 9:
-			raw = 192;
-			break; // 32
-		case 10:
-			raw = 255;
-			break; // 64
-		}
-	}
-	else
-	{
-		switch (value)
-		{
-		case 0:
-			raw = 4;
-			break; //  0
-		case 1:
-			raw = 6;
-			break; //  2
-		case 2:
-			raw = 10;
-			break; //  4
-		case 3:
-			raw = 16;
-			break; //  6
-		case 4:
-			raw = 32;
-			break; // 16
-		case 5:
-			raw = 48;
-			break; // 16
-		case 6:
-			raw = 64;
-			break; // 16
-		case 7:
-			raw = 96;
-			break; // 32
-		case 8:
-			raw = 128;
-			break; // 32
-		case 9:
-			raw = 192;
-			break; // 64
-		case 10:
-			raw = 255;
-			break; // 64
-		}
+	case 0:
+		raw = 1;
+		break; // 0
+	case 1:
+		raw = 8;
+		break; // 8
+	case 2:
+		raw = 16;
+		break; // 8
+	case 3:
+		raw = 32;
+		break; // 16
+	case 4:
+		raw = 48;
+		break; // 16
+	case 5:
+		raw = 72;
+		break; // 24
+	case 6:
+		raw = 96;
+		break; // 24
+	case 7:
+		raw = 128;
+		break; // 32
+	case 8:
+		raw = 160;
+		break; // 32
+	case 9:
+		raw = 192;
+		break; // 32
+	case 10:
+		raw = 255;
+		break; // 64
 	}
 	return raw;
 }

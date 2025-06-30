@@ -27,48 +27,48 @@ static void sigHandler(int sig)
 
 static SDL_Surface *screen;
 
-SDL_Surface** images;
+SDL_Surface **images;
 char **image_paths;
 static int selected = 0;
 static int count = 0;
 
 int loadImages()
 {
-    char* device = getenv("DEVICE");
-    // This needs to get a bit more flexible down the line, but for now we either expect the files
-    // in the pak root directory or in the "brick" subfolder.
+    // TrimUI Brick bootlogo path hardcoded
     char basepath[MAX_PATH];
-    if(exactMatch("brick", device)) {
-        snprintf(basepath, sizeof(basepath), "%s/Bootlogo.pak/brick/", TOOLS_PATH);
-    }
-    else {
-        snprintf(basepath, sizeof(basepath), "%s/Bootlogo.pak/smartpro/", TOOLS_PATH);
-    }
+    snprintf(basepath, sizeof(basepath), "%s/Bootlogo.pak/brick/", TOOLS_PATH);
 
-    // grab all bmp files in the directory and load them with IMG_Load, 
+    // grab all bmp files in the directory and load them with IMG_Load,
     // keep them in an array of SDL_Surface pointers
     DIR *dir;
     struct dirent *ent;
-    if ((dir = opendir(basepath)) != NULL) {
-        while ((ent = readdir(dir)) != NULL) {
-            if (strstr(ent->d_name, ".bmp") != NULL) {
+    if ((dir = opendir(basepath)) != NULL)
+    {
+        while ((ent = readdir(dir)) != NULL)
+        {
+            if (strstr(ent->d_name, ".bmp") != NULL)
+            {
                 char path[MAX_PATH];
                 snprintf(path, sizeof(path), "%s%s", basepath, ent->d_name);
                 SDL_Surface *bmp = IMG_Load(path);
-                if (bmp) {
+                if (bmp)
+                {
                     count++;
-                    images = realloc(images, sizeof(SDL_Surface*) * count);
-                    images[count-1] = bmp;
-                    image_paths = realloc(image_paths, sizeof(char*) * count);
-                    image_paths[count-1] = strdup(path);
+                    images = realloc(images, sizeof(SDL_Surface *) * count);
+                    images[count - 1] = bmp;
+                    image_paths = realloc(image_paths, sizeof(char *) * count);
+                    image_paths[count - 1] = strdup(path);
                 }
             }
         }
         closedir(dir);
-    } else {
+    }
+    else
+    {
         // could not open directory
         LOG_error("could not open directory");
-        if (CFG_getHaptics()) {
+        if (CFG_getHaptics())
+        {
             VIB_triplePulse(5, 150, 200);
         }
         return 0;
@@ -119,14 +119,14 @@ int main(int argc, char *argv[])
             if (PAD_justRepeated(BTN_LEFT))
             {
                 selected -= 1;
-                if (selected<0)
+                if (selected < 0)
                     selected = count - 1;
                 dirty = 1;
             }
             else if (PAD_justRepeated(BTN_RIGHT))
             {
                 selected += 1;
-                if (selected>=count)
+                if (selected >= count)
                     selected = 0;
                 dirty = 1;
             }
@@ -140,9 +140,9 @@ int main(int argc, char *argv[])
                 // sync
                 // umount $BOOT_PATH
                 // reboot
-                char* boot_path = "/mnt/boot/";
-                char* logo_path = image_paths[selected];
-                char cmd[256]; 
+                char *boot_path = "/mnt/boot/";
+                char *logo_path = image_paths[selected];
+                char cmd[256];
                 snprintf(cmd, sizeof(cmd), "mkdir -p %s && mount -t vfat /dev/mmcblk0p1 %s && cp \"%s\" %s/bootlogo.bmp && sync && umount %s && reboot", boot_path, boot_path, logo_path, boot_path, boot_path);
                 system(cmd);
             }
@@ -163,12 +163,13 @@ int main(int argc, char *argv[])
         {
             GFX_clear(screen);
 
-            if(count > 0) {
+            if (count > 0)
+            {
                 // render the selected image, centered on screen
                 SDL_Surface *image = images[selected];
                 SDL_Rect image_rect = {
-                    screen->w /2 - image->w /2,
-                    screen->h /2 - image->h / 2,
+                    screen->w / 2 - image->w / 2,
+                    screen->h / 2 - image->h / 2,
                     image->w,
                     image->h};
                 SDL_BlitSurface(image, NULL, screen, &image_rect);

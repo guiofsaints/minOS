@@ -9,9 +9,8 @@ minOS uses a sophisticated build system based on Docker containerization and hie
 ### Build System Components
 
 ```
-minOS Build System
+minOS Build System - TrimUI Brick Only
 ├── makefile                    # Main orchestration makefile
-├── makefile.native            # Native desktop builds
 ├── makefile.toolchain         # Docker cross-compilation
 ├── docker-compose.yml         # Development environment
 ├── toolchains/                # Platform-specific toolchains
@@ -23,8 +22,7 @@ minOS Build System
 │   │   ├── settings/         # Configuration system (C++)
 │   │   ├── common/           # Shared APIs and libraries
 │   │   └── cores/            # Libretro emulator cores
-│   ├── desktop/              # Desktop development platform
-│   └── tg5040/               # TrimUI hardware platform
+│   └── tg5040/               # TrimUI Brick platform
 ├── skeleton/                 # File system templates
 ├── build/                    # Temporary build artifacts
 └── releases/                 # Final release packages (.zip)

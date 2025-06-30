@@ -48,15 +48,16 @@ minOS consists of several core components:
 
 ## Supported Platforms
 
+**TrimUI Brick Only** - Optimized firmware exclusively for TrimUI Brick
+
 | Platform | Status | Description | Devices |
 |----------|--------|-------------|---------|
-| **tg5040** | ✅ Primary | TrimUI Smart Pro/Brick | TrimUI Smart Pro, TrimUI Brick |
-| **desktop** | 🟡 Development | Testing and development only | Linux, macOS, Windows (WSL) |
+| **tg5040** | ✅ Primary | TrimUI Brick optimized firmware | TrimUI Brick |
 
 ### System Requirements
 
-**For TrimUI Devices:**
-- TrimUI Smart Pro or TrimUI Brick
+**For TrimUI Brick:**
+- TrimUI Brick device
 - MicroSD card (Class 10 or better recommended)
 - FAT32 file system
 
@@ -126,10 +127,7 @@ minOS consists of several core components:
 git clone git@github.com:guiofsaints/minOS.git
 cd minOS
 
-# Build for desktop (testing)
-make build PLATFORM=desktop
-
-# Build for TrimUI hardware
+# Build for TrimUI Brick
 make build PLATFORM=tg5040
 
 # Build with cores
@@ -169,8 +167,6 @@ For complete build documentation, see [Build Guide](docs/build.md) and [Quick Bu
 ### Platform-Specific Notes
 
 - **tg5040**: Primary target platform (TrimUI Smart Pro/Brick)
-- **desktop**: Development and testing only, not for actual device use
-
 ## Installation
 
 ### From Releases
@@ -219,14 +215,12 @@ For development, use the provided Docker environment and follow the coding stand
 
 2. **Build and Test:**
    ```bash
-   make build PLATFORM=desktop    # Test on desktop first
-   make build PLATFORM=tg5040     # Build for target device
+   make build PLATFORM=tg5040     # Build for TrimUI Brick
    ```
 
 3. **Code Structure:**
    - `workspace/all/` - Cross-platform components
-   - `workspace/tg5040/` - TrimUI-specific code
-   - `workspace/desktop/` - Development platform
+   - `workspace/tg5040/` - TrimUI Brick-specific code
    - `docs/` - Comprehensive documentation
 
 ### Key Development Files

@@ -69,13 +69,11 @@ Shader *shaders[MAXSHADERS] = {
 static int nrofshaders = 0; // choose between 1 and 3 pipelines, > pipelines = more cpu usage, but more shader options and shader upscaling stuff
 ///////////////////////////////
 
-int is_brick = 0;
+// Removed is_brick variable - TrimUI Brick hardcoded
 static SDL_Joystick *joystick;
 void PLAT_initInput(void)
 {
-	char *device = getenv("DEVICE");
-	is_brick = exactMatch("brick", device);
-
+	// TrimUI Brick device hardcoded
 	SDL_InitSubSystem(SDL_INIT_JOYSTICK);
 	joystick = SDL_JoystickOpen(0);
 }
@@ -478,10 +476,7 @@ void PLAT_initShaders()
 
 SDL_Surface *PLAT_initVideo(void)
 {
-	char *device = getenv("DEVICE");
-	is_brick = exactMatch("brick", device);
-	// LOG_info("DEVICE: %s is_brick: %i\n", device, is_brick);
-
+	// TrimUI Brick device hardcoded
 	SDL_InitSubSystem(SDL_INIT_VIDEO);
 	SDL_ShowCursor(0);
 
@@ -2535,8 +2530,8 @@ void PLAT_enableBacklight(int enable)
 {
 	if (enable)
 	{
-		if (is_brick)
-			SetRawBrightness(8);
+		// TrimUI Brick hardcoded
+		SetRawBrightness(8);
 		SetBrightness(GetBrightness());
 	}
 	else
@@ -2786,10 +2781,8 @@ int PLAT_pickSampleRate(int requested, int max)
 
 char *PLAT_getModel(void)
 {
-	char *model = getenv("TRIMUI_MODEL");
-	if (model)
-		return model;
-	return "Trimui Smart Pro";
+	// Hardcoded for TrimUI Brick only
+	return "TrimUI Brick";
 }
 
 void PLAT_getOsVersionInfo(char *output_str, size_t max_len)
@@ -2833,121 +2826,65 @@ void PLAT_chmod(const char *file, int writable)
 
 void PLAT_initDefaultLeds()
 {
-	char *device = getenv("DEVICE");
-	is_brick = exactMatch("brick", device);
-	if (is_brick)
-	{
-		lightsDefault[0] = (LightSettings){
-				"FN 1 key",
-				"f1",
-				4,
-				1000,
-				100,
-				0xFFFFFF,
-				0xFFFFFF,
-				0,
-				{},
-				1,
-				100,
-				0};
-		lightsDefault[1] = (LightSettings){
-				"FN 2 key",
-				"f2",
-				4,
-				1000,
-				100,
-				0xFFFFFF,
-				0xFFFFFF,
-				0,
-				{},
-				1,
-				100,
-				0};
-		lightsDefault[2] = (LightSettings){
-				"Topbar",
-				"m",
-				4,
-				1000,
-				100,
-				0xFFFFFF,
-				0xFFFFFF,
-				0,
-				{},
-				1,
-				100,
-				0};
-		lightsDefault[3] = (LightSettings){
-				"L/R triggers",
-				"lr",
-				4,
-				1000,
-				100,
-				0xFFFFFF,
-				0xFFFFFF,
-				0,
-				{},
-				1,
-				100,
-				0};
-	}
-	else
-	{
-		lightsDefault[0] = (LightSettings){
-				"Joystick L",
-				"l",
-				4,
-				1000,
-				100,
-				0xFFFFFF,
-				0xFFFFFF,
-				0,
-				{},
-				1,
-				100,
-				0};
-		lightsDefault[1] = (LightSettings){
-				"Joystick R",
-				"r",
-				4,
-				1000,
-				100,
-				0xFFFFFF,
-				0xFFFFFF,
-				0,
-				{},
-				1,
-				100,
-				0};
-		lightsDefault[2] = (LightSettings){
-				"Logo",
-				"m",
-				4,
-				1000,
-				100,
-				0xFFFFFF,
-				0xFFFFFF,
-				0,
-				{},
-				1,
-				100,
-				0};
-	}
+	// TrimUI Brick LED configuration hardcoded
+	lightsDefault[0] = (LightSettings){
+			"FN 1 key",
+			"f1",
+			4,
+			1000,
+			100,
+			0xFFFFFF,
+			0xFFFFFF,
+			0,
+			{},
+			1,
+			100,
+			0};
+	lightsDefault[1] = (LightSettings){
+			"FN 2 key",
+			"f2",
+			4,
+			1000,
+			100,
+			0xFFFFFF,
+			0xFFFFFF,
+			0,
+			{},
+			1,
+			100,
+			0};
+	lightsDefault[2] = (LightSettings){
+			"Topbar",
+			"m",
+			4,
+			1000,
+			100,
+			0xFFFFFF,
+			0xFFFFFF,
+			0,
+			{},
+			1,
+			100,
+			0};
+	lightsDefault[3] = (LightSettings){
+			"L/R triggers",
+			"lr",
+			4,
+			1000,
+			100,
+			0xFFFFFF,
+			0xFFFFFF,
+			0,
+			{},
+			1,
+			100,
+			0};
 }
 void PLAT_initLeds(LightSettings *lights)
 {
-	char *device = getenv("DEVICE");
-	is_brick = exactMatch("brick", device);
-
+	// TrimUI Brick hardcoded - always use brick settings
 	PLAT_initDefaultLeds();
-	FILE *file;
-	if (is_brick)
-	{
-		file = PLAT_OpenSettings("ledsettings_brick.txt");
-	}
-	else
-	{
-		file = PLAT_OpenSettings("ledsettings.txt");
-	}
+	FILE *file = PLAT_OpenSettings("ledsettings_brick.txt");
 
 	if (file == NULL)
 	{
@@ -3042,29 +2979,23 @@ void PLAT_setLedInbrightness(LightSettings *led)
 {
 	char filepath[256];
 	FILE *file;
-	// first set brightness
-	if (is_brick)
-	{
-		if (strcmp(led->filename, "m") == 0)
-		{
-			snprintf(filepath, sizeof(filepath), LED_PATH1);
-		}
-		else if (strcmp(led->filename, "f1") == 0)
-		{
-			snprintf(filepath, sizeof(filepath), LED_PATH3);
-		}
-		else
-		{
-			snprintf(filepath, sizeof(filepath), "/sys/class/led_anim/max_scale_%s", led->filename);
-		}
-	}
-	else
+	// TrimUI Brick LED configuration hardcoded
+	if (strcmp(led->filename, "m") == 0)
 	{
 		snprintf(filepath, sizeof(filepath), LED_PATH1);
 	}
+	else if (strcmp(led->filename, "f1") == 0)
+	{
+		snprintf(filepath, sizeof(filepath), LED_PATH3);
+	}
+	else
+	{
+		snprintf(filepath, sizeof(filepath), "/sys/class/led_anim/max_scale_%s", led->filename);
+	}
+
 	if (strcmp(led->filename, "f2") != 0)
 	{
-		// do nothhing for f2
+		// do nothing for f2
 		PLAT_chmod(filepath, 1);
 		file = fopen(filepath, "w");
 		if (file != NULL)
@@ -3079,29 +3010,23 @@ void PLAT_setLedBrightness(LightSettings *led)
 {
 	char filepath[256];
 	FILE *file;
-	// first set brightness
-	if (is_brick)
-	{
-		if (strcmp(led->filename, "m") == 0)
-		{
-			snprintf(filepath, sizeof(filepath), "/sys/class/led_anim/max_scale");
-		}
-		else if (strcmp(led->filename, "f1") == 0)
-		{
-			snprintf(filepath, sizeof(filepath), "/sys/class/led_anim/max_scale_f1f2");
-		}
-		else
-		{
-			snprintf(filepath, sizeof(filepath), "/sys/class/led_anim/max_scale_%s", led->filename);
-		}
-	}
-	else
+	// TrimUI Brick LED configuration hardcoded
+	if (strcmp(led->filename, "m") == 0)
 	{
 		snprintf(filepath, sizeof(filepath), "/sys/class/led_anim/max_scale");
 	}
+	else if (strcmp(led->filename, "f1") == 0)
+	{
+		snprintf(filepath, sizeof(filepath), "/sys/class/led_anim/max_scale_f1f2");
+	}
+	else
+	{
+		snprintf(filepath, sizeof(filepath), "/sys/class/led_anim/max_scale_%s", led->filename);
+	}
+
 	if (strcmp(led->filename, "f2") != 0)
 	{
-		// do nothhing for f2
+		// do nothing for f2
 		PLAT_chmod(filepath, 1);
 		file = fopen(filepath, "w");
 		if (file != NULL)

@@ -40,17 +40,9 @@ ifdef ENABLE_SIMD
 endif
 
 LDFLAGS	 += -lmsettings -lsamplerate
-ifeq ($(PLATFORM), desktop)
-ifeq ($(UNAME_S),Linux)
-CFLAGS += `pkg-config --cflags libzip`
-LDFLAGS += `pkg-config --libs libzip`
-else
-LDFLAGS += -lzip
-endif
-else
+# TrimUI Brick only - use libretro-common and libsrm
 LDFLAGS	 +=  -Llibretro-common -lsrm -lzip
 CFLAGS   += -DHAS_SRM
-endif
 # CFLAGS  += -Wall -Wno-unused-variable -Wno-unused-function -Wno-format-overflow
 # CFLAGS  += -fsanitize=address -fno-common
 # LDFLAGS += -lasan
@@ -62,11 +54,7 @@ BUILD_DATE!=date +%Y.%m.%d
 BUILD_HASH!=cat ../../hash.txt
 CFLAGS += -DBUILD_DATE=\"${BUILD_DATE}\" -DBUILD_HASH=\"${BUILD_HASH}\"
 
-ifeq ($(PLATFORM), desktop)
-all: libretro-common $(PREFIX_LOCAL)/include/msettings.h
-	mkdir -p build/$(PLATFORM)
-	$(CC) $(SOURCE) -o $(PRODUCT) $(CFLAGS) $(LDFLAGS)
-else
+# TrimUI Brick only build
 all: libretro-common libsrm.a $(PREFIX_LOCAL)/include/msettings.h
 	mkdir -p build/$(PLATFORM)
 	cp /usr/lib/aarch64-linux-gnu/libsamplerate.so.0 build/$(PLATFORM)

@@ -11,7 +11,7 @@ endif
 endif
 
 ifeq (,$(PLATFORMS))
-PLATFORMS = tg5040 desktop
+PLATFORMS = tg5040
 endif
 
 ###########################################################
@@ -24,11 +24,9 @@ ifeq ($(BUILD_BRANCH),main)
 else
   RELEASE_BETA := -$(BUILD_BRANCH)
 endif
-ifeq ($(PLATFORM), desktop)
-	TOOLCHAIN_FILE := makefile.native
-else
-	TOOLCHAIN_FILE := makefile.toolchain
-endif
+
+# Always use toolchain for TrimUI Brick only
+TOOLCHAIN_FILE := makefile.toolchain
 RELEASE_BASE=minOS-$(RELEASE_TIME)$(RELEASE_BETA)
 RELEASE_DOT:=$(shell find ./releases/. -regex ".*/${RELEASE_BASE}-[0-9]+-base\.zip" | wc -l | sed 's/ //g')
 RELEASE_NAME ?= $(RELEASE_BASE)-$(RELEASE_DOT)
@@ -68,11 +66,9 @@ endif
 system:
 	make -f ./workspace/$(PLATFORM)/platform/makefile.copy PLATFORM=$(PLATFORM)
 	
-	# populate system
-ifneq ($(PLATFORM), desktop)
+	# populate system - TrimUI Brick only
 	cp ./workspace/$(PLATFORM)/keymon/keymon.elf ./build/SYSTEM/$(PLATFORM)/bin/
 	cp ./workspace/all/syncsettings/build/$(PLATFORM)/syncsettings.elf ./build/SYSTEM/$(PLATFORM)/bin/
-endif
 	cp ./workspace/$(PLATFORM)/libmsettings/libmsettings.so ./build/SYSTEM/$(PLATFORM)/lib
 	cp ./workspace/all/minos/build/$(PLATFORM)/minos.elf ./build/SYSTEM/$(PLATFORM)/bin/
 	cp ./workspace/all/minarch/build/$(PLATFORM)/minarch.elf ./build/SYSTEM/$(PLATFORM)/bin/

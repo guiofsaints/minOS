@@ -15,22 +15,7 @@ endif
 .PHONY: all
 
 all:
-ifeq ($(PLATFORM), desktop)
-	cd ./$(PLATFORM)/libmsettings && make
-	cd ./$(PLATFORM) && make early # eg. other libs
-	cd ./all/minos/ && make
-	cd ./all/minarch/ && make
-	cd ./all/battery/ && make
-	cd ./all/clock/ && make
-	cd ./all/libbatmondb/ && make
-	cd ./all/batmon/ && make
-	cd ./all/libgametimedb/ && make
-	cd ./all/gametimectl/ && make
-	cd ./all/gametime/ && make
-	cd ./all/minput/ && make
-	cd ./all/nextval/ && make
-	cd ./all/settings/ && make
-else 
+	# TrimUI Brick only build
 	cd ./$(PLATFORM)/wifimanager && make
 	cd ./$(PLATFORM)/libmsettings && make
 	cd ./$(PLATFORM) && make early # eg. other libs
@@ -50,7 +35,6 @@ else
 	cd ./all/settings/ && make
 	cd ./all/ledcontrol/ && make
 	cd ./all/bootlogo/ && make
-endif
 ifdef COMPILE_CORES
 	make cores
 else
@@ -68,13 +52,12 @@ endif
 	cd ./$(PLATFORM)/cores && make $(CORE)
 
 clean:
-ifneq ($(PLATFORM), desktop)
+	# TrimUI Brick only clean
 	cd ./$(PLATFORM)/wifimanager && make clean
 	cd ./$(PLATFORM)/keymon && make clean
 	cd ./all/syncsettings/ && make clean
 	cd ./all/ledcontrol/ && make clean
 	cd ./all/bootlogo/ && make clean
-endif
 	cd ./$(PLATFORM)/libmsettings && make clean
 	cd ./all/minos/ && make clean
 	cd ./all/minarch/ && make clean

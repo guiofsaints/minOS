@@ -393,6 +393,38 @@ void getDisplayName(const char *in_name, char *out_name)
         tmp--;
     tmp[1] = '\0';
 }
+// Legacy name mapping for save state compatibility
+static const char *mapLegacyEmuName(const char *emu_name)
+{
+    // Map new names back to legacy names to maintain save state compatibility
+    static struct
+    {
+        const char *new_name;
+        const char *legacy_name;
+    } name_mapping[] = {
+        {"NES", "FC"},              // Nintendo Entertainment System
+        {"SNES", "SFC"},            // Super Nintendo Entertainment System
+        {"Genesis", "MD"},          // Sega Genesis/Mega Drive
+        {"Master System", "MS"},    // Sega Master System
+        {"Game Gear", "GG"},        // Sega Game Gear
+        {"TurboGrafx-16", "PCE"},   // PC Engine/TurboGrafx-16
+        {"Lynx", "LYNX"},           // Atari Lynx
+        {"Neo Geo Pocket", "NGPC"}, // Neo Geo Pocket Color
+        {"WonderSwan", "WSC"},      // WonderSwan Color
+        {NULL, NULL}                // End marker
+    };
+
+    for (int i = 0; name_mapping[i].new_name != NULL; i++)
+    {
+        if (strcmp(emu_name, name_mapping[i].new_name) == 0)
+        {
+            return name_mapping[i].legacy_name;
+        }
+    }
+
+    return emu_name; // Return original if no mapping found
+}
+
 void getEmuName(const char *in_name, char *out_name)
 { // NOTE: both char arrays need to be MAX_PATH length!
     char *tmp;
@@ -423,6 +455,10 @@ void getEmuName(const char *in_name, char *out_name)
         tmp = strchr(out_name, ')');
         tmp[0] = '\0';
     }
+
+    // Apply legacy name mapping for save state compatibility
+    const char *legacy_name = mapLegacyEmuName(out_name);
+    strcpy(out_name, legacy_name);
 
     // printf(" out_name: %s\n", out_name); fflush(stdout);
 }
